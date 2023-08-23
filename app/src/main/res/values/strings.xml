@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name"><b>M</b>arket<b>C</b>alc</string>
+    <string name="title_activity_adicionar_tarefa">AdicionarTarefa</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="salvar">salvar</string>
+    <string name="insira_a_quantidade_de_itens">insira a quantidade de itens</string>
+    <string name="insira_o_valor_do_produto">Insira o valor do produto</string>
+    <string name="adicionar_produto">Adicionar Produto</string>
+    <string name="adicionar_tarefa">Adicionar Tarefa</string>
+
+</resources>

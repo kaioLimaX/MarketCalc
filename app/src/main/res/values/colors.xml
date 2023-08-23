@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <!--cor primaria-->
+
+    <color name="primaria">#8077DC</color>
+    <color name="primaria_variacao">#6960C4</color>
+
+    <!--cor secundaria-->
+
+    <color name="secundaria">#354959</color>
+    <color name="secundaria_variacao">#232C33</color>
+
+
+    <color name="fab_done">#5FD564</color>
+
+
+    <color name="fundo">#EFEFEF</color>
+</resources>
