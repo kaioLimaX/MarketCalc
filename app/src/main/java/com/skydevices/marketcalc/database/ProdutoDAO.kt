@@ -1,29 +1,37 @@
 package com.skydevices.marketcalc.database
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
-import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
+import com.skydevices.marketcalc.ui.CompraActivity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-class ProdutoDAO(context: Context) : iProdutoDAO {
+
+@ExperimentalBadgeUtils class ProdutoDAO(context: Context) : iProdutoDAO {
 
     private val escrita = DatabaseHelper(context).writableDatabase
     private val leitura = DatabaseHelper(context).readableDatabase
 
-    override fun salvar(produto: Produto): Boolean {
+
+    override fun salvarProduto(produto: Produto): Boolean {
         // val sql = "INSERT INTO produtos VALUES( null, '$[${produto.nome},'descricao..' )"
 
         val valores = ContentValues()
+        valores.put(DatabaseHelper.ID_COMPRA,produto.id_compra)
         valores.put(DatabaseHelper.VALOR, produto.valor_produto)
         valores.put(DatabaseHelper.QUANTIDADE, produto.qtd_produto)
+        valores.put(DatabaseHelper.DESCRICAO_PRODUTO,produto.descricao)
+
+
 
         try {
             //escrita.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
@@ -43,21 +51,62 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         return true
     }
 
-    override fun atualizar(produto: Produto): Boolean {
-        /*val titulo = binding.editProduto.text.toString()
-        val item = binding.spinnerLista.selectedItem
-        val posicao = binding.spinnerLista.selectedItemPosition
-
-        val sql =
-            "UPDATE ${DatabaseHelper.TABELA_PRODUTOS} SET ${DatabaseHelper.TITULO} = '$titulo' WHERE ${DatabaseHelper.ID_PRODUTO} = '${item}'" // COMANDO UPDATE para atualizar itens
-*/
+    override fun iniciarCompra(compra: Compra) : Int{
 
         val valores = ContentValues()
+        valores.put(DatabaseHelper.STATUS_COMPRA, compra.status_compra)
+        valores.put(DatabaseHelper.DATA_COMPRA, compra.data_compra.toString())
+        valores.put(DatabaseHelper.VALOR_TOTAL,0.0)
+
+        var novoID: Long = -1
+
+
+        try {
+
+            //escrita.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
+            val result = escrita.insert(
+                DatabaseHelper.TABELA_COMPRAS,
+                null,
+                valores
+            )
+
+            if (result != -1L) {
+                novoID = result
+            }
+
+            Log.i("info_db", "Sucesso ao Iniciar Nova Compra, ID gerado: $novoID")
+
+           /* escrita.delete(DatabaseHelper.TABELA_PRODUTOS, null, null)
+            listar()*/
+
+
+
+
+        } catch (e: Exception) {
+            Log.i("info_db", "Falha  ao Iniciar Nova Compra ")
+
+            return 0
+        }
+        return novoID.toInt()
+
+    }
+
+    override fun atualizar(produto: Produto): Boolean {
+
+        val valores = ContentValues()
+        valores.put(DatabaseHelper.ID_COMPRA,  produto.id_compra)
+        valores.put(DatabaseHelper.DESCRICAO_PRODUTO,  produto.descricao)
         valores.put(DatabaseHelper.VALOR, produto.valor_produto)
         valores.put(DatabaseHelper.QUANTIDADE, produto.qtd_produto)
+
+
+
         val args = arrayOf(produto.id_produto.toString())
+
+        Log.i("info_atualizar", "valores : ${valores} ")
+        Log.i("info_atualizar", "valores : ${args[0]} ")
+
         try {
-            //bancoDados.writableDatabase.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
             escrita.update(
                 DatabaseHelper.TABELA_PRODUTOS,
                 valores,
@@ -76,13 +125,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
     }
 
     override fun remover(id: Int): Boolean {
-        /*
-                val item = binding.spinnerLista.selectedItem
-                val posicao = binding.spinnerLista.selectedItemPosition
 
-                val sql =
-                    "DELETE FROM ${DatabaseHelper.TABELA_PRODUTOS} WHERE ${DatabaseHelper.ID_PRODUTO} = '${item}'" // COMANDO UPDATE para atualizar itens
-        */
         val args = arrayOf(id.toString())
 
         try {
@@ -95,6 +138,8 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
             Log.i("info_db", "Sucesso ao Remover Produto ") // log do sistema
 
+
+
         } catch (e: Exception) {
             Log.i("info_db", "Falha ao Remover Produto ")
 
@@ -103,22 +148,26 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         return true
     }
 
-    override fun listar(): List<Produto> {
+    override fun listar(id : Int): List<Produto> {
         val listaProdutos = mutableListOf<Produto>()
 
         val sql =
-            "SELECT * FROM ${DatabaseHelper.TABELA_PRODUTOS} ORDER BY ${DatabaseHelper.ID_PRODUTO} DESC" // linha de comando SQL para selecionar todos os itens da tabela Produtos
+            "SELECT * FROM ${DatabaseHelper.TABELA_PRODUTOS} WHERE ${DatabaseHelper.ID_COMPRA} = ${id} ORDER BY ${DatabaseHelper.ID_PRODUTO} DESC" // linha de comando SQL para selecionar todos os itens da tabela Produtos
 
         @SuppressLint("Recycle")
         val cursor = leitura. // usado para selecionar(ler) dados
         rawQuery(sql, null)
 
         val indiceId = cursor.getColumnIndex(DatabaseHelper.ID_PRODUTO)
+        val indiceCompra = cursor.getColumnIndex(DatabaseHelper.ID_COMPRA)
         val indiceValor = cursor.getColumnIndex(DatabaseHelper.VALOR)
         val indiceQtd = cursor.getColumnIndex(DatabaseHelper.QUANTIDADE)
+        val indiceDescricao = cursor.getColumnIndex(DatabaseHelper.DESCRICAO_PRODUTO)
 
 
         while (cursor.moveToNext()) {
+
+            val idCompra = cursor.getInt(indiceCompra)
 
             val idProduto =
                 cursor.getInt(indiceId) // recupera o indice na coluna determinada, no caso coluna 1 no tipo INT
@@ -126,21 +175,36 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
                 cursor.getDouble(indiceValor) // recupera o indice na coluna determinada, no caso coluna 2 no tipo String
             val quantidade = cursor.getInt(indiceQtd)
 
-            Log.i("info_db", "id: $idProduto valor: $valor ")
+            val descricao = cursor.getString(indiceDescricao)
+
+            Log.i("info_db", "id: $idProduto valor: $valor, Descricao: $descricao ")
             listaProdutos.add(
-                Produto(idProduto, valor, quantidade)
+                Produto(idProduto,idCompra,descricao, valor, quantidade)
             )
 
 
-        }
 
+
+
+
+
+
+        }
+        var atualizaValorTotal = "UPDATE ${DatabaseHelper.TABELA_COMPRAS}\n" +
+                "SET ${DatabaseHelper.VALOR_TOTAL} = (\n" +
+                "    SELECT COALESCE(SUM(${DatabaseHelper.VALOR} * ${DatabaseHelper.QUANTIDADE}), 0)\n" +
+                "    FROM produtos\n" +
+                "    WHERE id_compra = compras.id_compra\n" +
+                ")"
+
+        escrita.execSQL(atualizaValorTotal)
         return listaProdutos
 
     }
 
     override fun salvarCompra(compra: Compra): Boolean {
         val valores = ContentValues()
-        valores.put(DatabaseHelper.VALOR_TOTAL, compra.valor_compra)
+        valores.put(DatabaseHelper.VALOR_TOTAL, compra.status_compra)
         valores.put(DatabaseHelper.DATA_COMPRA, compra.data_compra.toString())
 
 
@@ -148,13 +212,11 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
             //escrita.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
             escrita.insert(
-                DatabaseHelper.TABELA_HISTORICO,
+                DatabaseHelper.TABELA_COMPRAS,
                 null,
                 valores
             )
 
-            escrita.delete(DatabaseHelper.TABELA_PRODUTOS, null, null)
-            listar()
             Log.i("info_db", "Sucesso ao Inserir item na Tabela ") // log do sistema
 
         } catch (e: Exception) {
@@ -170,15 +232,16 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         val listaHistorico = mutableListOf<Compra>()
 
         val sql =
-            "SELECT * FROM ${DatabaseHelper.TABELA_HISTORICO} ORDER BY ${DatabaseHelper.ID_HISTORICO} DESC" // linha de comando SQL para selecionar todos os itens da tabela Produtos
+            "SELECT * FROM ${DatabaseHelper.TABELA_COMPRAS} ORDER BY ${DatabaseHelper.ID_COMPRA} DESC" // linha de comando SQL para selecionar todos os itens da tabela Produtos
 
         @SuppressLint("Recycle")
         val cursor = leitura. // usado para selecionar(ler) dados
         rawQuery(sql, null)
 
-        val indiceId = cursor.getColumnIndex(DatabaseHelper.ID_HISTORICO)
+        val indiceId = cursor.getColumnIndex(DatabaseHelper.ID_COMPRA)
         val indiceValor = cursor.getColumnIndex(DatabaseHelper.VALOR_TOTAL)
         val indiceData = cursor.getColumnIndex(DatabaseHelper.DATA_COMPRA)
+        val indiceStatus = cursor.getColumnIndex(DatabaseHelper.STATUS_COMPRA)
 
 
         while (cursor.moveToNext()) {
@@ -190,10 +253,11 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
             val data = cursor.getString(indiceData)
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val localDate = LocalDate.parse(data, formatter)
+            val status = cursor.getInt(indiceStatus)
 
             Log.i("info_db", "id: $idCompra valor: $valorTotal ")
             listaHistorico.add(
-                Compra(idCompra, valorTotal, localDate)
+                Compra(idCompra, status,localDate,valorTotal)
             )
 
 

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.skydevices.marketcalc.databinding.ActivityAdicionarTarefaBinding
 import java.sql.Date
 import java.time.LocalDate
 
@@ -18,11 +17,13 @@ class DatabaseHelper(context:Context): SQLiteOpenHelper(// databaseHelper herda 
 
     companion object{
         const val TABELA_PRODUTOS = "produtos"
-        const val TABELA_HISTORICO = "historico"
+        const val TABELA_COMPRAS = "compras"
         const val ID_PRODUTO = "id_produto"
-        const val ID_HISTORICO = "id_produto"
+        const val ID_COMPRA = "id_compra"
+        const val DESCRICAO_PRODUTO = "descricao"
         const val VALOR = "valor"
         const val VALOR_TOTAL = "valor_total"
+        const val STATUS_COMPRA = "status"
         const val QUANTIDADE = "quantidade"
         const val DATA_COMPRA = "data_compra"
 
@@ -32,18 +33,21 @@ class DatabaseHelper(context:Context): SQLiteOpenHelper(// databaseHelper herda 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(db: SQLiteDatabase?) {
 
+        val sql = "CREATE TABLE IF NOT EXISTS $TABELA_COMPRAS(" +
+                "$ID_COMPRA INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                "$STATUS_COMPRA INTEGER," +
+                "$VALOR_TOTAL DOUBLE(8,2)," +
+                "$DATA_COMPRA DATE" +
+                ");"
 
-        val sql = "CREATE TABLE IF NOT EXISTS $TABELA_PRODUTOS(" +
+        val sql2 = "CREATE TABLE IF NOT EXISTS $TABELA_PRODUTOS(" +
                 "$ID_PRODUTO INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                "$DESCRICAO_PRODUTO TEXT," +
+                "$ID_COMPRA INTEGER, " +
                 "$VALOR DOUBLE(5,2)," +
                 "$QUANTIDADE INTEGER" +
                 ");"
 
-        val sql2 = "CREATE TABLE IF NOT EXISTS $TABELA_HISTORICO(" +
-                "$ID_HISTORICO INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "$VALOR_TOTAL DOUBLE(10,2)," +
-                "$DATA_COMPRA DATE" +
-                ");"
 
         try { // try é um comando necessario para tratamento de erros de retorno de funções
             db?.execSQL(sql) // comando para executar linha de codigo mysql

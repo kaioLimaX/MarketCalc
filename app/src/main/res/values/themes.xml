@@ -1,15 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.MarketCalc" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Base.Theme.MarketCalc" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!--cores primarias-->
-        <item name="colorPrimary">@color/primaria</item>
-        <item name="colorPrimaryVariant">@color/primaria_variacao</item>
+        <item name="colorPrimary">@color/secundaria</item>
+        <item name="colorPrimaryVariant">@color/secundaria_variacao</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <!--cores secundarias-->
-        <item name="colorSecondary">@color/secundaria</item>
-        <item name="colorSecondaryVariant">@color/secundaria_variacao</item>
+        <item name="colorSecondary">@color/primaria</item>
+        <item name="colorSecondaryVariant">@color/primaria_variacao</item>
         <item name="colorOnSecondary">@color/black</item>
 
         <!--Status bar Color-->

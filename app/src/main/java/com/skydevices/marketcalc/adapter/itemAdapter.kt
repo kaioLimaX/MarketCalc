@@ -1,18 +1,27 @@
 package com.skydevices.marketcalc.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.skydevices.marketcalc.databinding.ItemProdutoBinding
 import com.skydevices.marketcalc.model.Produto
 
+
 class itemAdapter(
-    val onClickExcluir: (Int) -> Unit
+    val onClickExcluir: (Produto) -> Unit,
+
+    val onClickEditar : (Produto) -> Unit
 
 ) : Adapter<itemAdapter.ProdutoViewHolder>() {
 
+
+
     private var listaProduto: List<Produto> = listOf()
+
+
 
      fun adicionarLista(lista : List<Produto>){
         this.listaProduto = lista
@@ -29,12 +38,23 @@ class itemAdapter(
         }
 
         fun binding(produto: Produto) {
-            binding.txtProduto.text = "Produto ${adapterPosition + 1}"
+            val titulo = if(produto.descricao!!.isNotEmpty()){
+                "${produto.descricao}"
+            }else{
+                "Produto ${listaProduto.size - adapterPosition}"
+            }
+
+            binding.txtProduto.text = titulo
             binding.txtQuantidade.text = "${produto.qtd_produto} itens a R$ ${produto.valor_produto} cada"
             binding.txtTotalItem.text = "R$ ${ String.format("%.2f", produto.qtd_produto * produto.valor_produto)}"
-            binding.btnExcluir.setOnClickListener {
-                onClickExcluir(produto.id_produto)
+            binding.clProduto.setOnLongClickListener {
+                onClickExcluir(produto)
+                true
             }
+            binding.clProduto.setOnClickListener {
+                onClickEditar(produto)
+            }
+
         }
 
     }

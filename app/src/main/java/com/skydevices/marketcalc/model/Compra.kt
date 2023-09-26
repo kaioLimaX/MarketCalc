@@ -5,6 +5,7 @@ import java.time.LocalDate
 
 class Compra(
     val id_compra: Int,
-    val valor_compra: Double,
-    val data_compra: LocalDate
+    val status_compra: Int,
+    val data_compra: LocalDate,
+    val total_compra: Double
 )
