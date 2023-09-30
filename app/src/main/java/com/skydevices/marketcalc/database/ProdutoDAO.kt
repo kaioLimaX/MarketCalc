@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
@@ -203,24 +204,23 @@ import java.time.format.DateTimeFormatter
     }
 
     override fun salvarCompra(compra: Compra): Boolean {
-        val valores = ContentValues()
-        valores.put(DatabaseHelper.VALOR_TOTAL, compra.status_compra)
-        valores.put(DatabaseHelper.DATA_COMPRA, compra.data_compra.toString())
+
+        val sql = "UPDATE ${DatabaseHelper.TABELA_COMPRAS} SET ${DatabaseHelper.STATUS_COMPRA} = 1 WHERE ${DatabaseHelper.ID_COMPRA} = ${compra.id_compra}"
 
 
         try {
 
-            //escrita.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
-            escrita.insert(
+            escrita.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
+            /*escrita.insert(
                 DatabaseHelper.TABELA_COMPRAS,
                 null,
                 valores
-            )
+            )*/
 
-            Log.i("info_db", "Sucesso ao Inserir item na Tabela ") // log do sistema
+            Log.i("info_db", "Sucesso ao Concluir compra ") // log do sistema
 
         } catch (e: Exception) {
-            Log.i("info_db", "Falha ao inserir item na Tabela ")
+            Log.i("info_db", "Falha ao Concluir compra ")
 
             return false
         }

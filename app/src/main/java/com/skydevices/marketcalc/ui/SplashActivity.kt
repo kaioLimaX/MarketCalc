@@ -23,7 +23,7 @@ import com.skydevices.marketcalc.databinding.ActivitySplashBinding
             startActivity(intent)
             finish()
 
-        },3300)
+        },3000)
     }
 }
 

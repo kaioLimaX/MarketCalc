@@ -14,6 +14,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.badge.BadgeDrawable
@@ -21,10 +22,13 @@ import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.skydevices.marketcalc.R
+import com.skydevices.marketcalc.Utils.MaskMoney
 import com.skydevices.marketcalc.adapter.itemAdapter
 import com.skydevices.marketcalc.database.ProdutoDAO
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
+import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
+import java.util.Locale
 
 
 @ExperimentalBadgeUtils
@@ -46,9 +50,13 @@ class CompraActivity : AppCompatActivity() {
 
     private var idRecebido = 0
 
+    lateinit var editCompra: Compra
+
     lateinit var editProduto: Produto
 
     private var txtQntIncremento = 1
+
+
     class RoundedAlertExcluir(
         private val produto: Produto,
         private val listarCallback: () -> Unit
@@ -84,8 +92,11 @@ class CompraActivity : AppCompatActivity() {
 
     }
 
-    class RoundedAlertDialog : DialogFragment() {
-        //...
+    class RoundedAlertDialog(
+        private val compra: Compra,
+        private val listarCallback: () -> Unit
+    ) : DialogFragment() {
+
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             return MaterialAlertDialogBuilder(
@@ -94,35 +105,32 @@ class CompraActivity : AppCompatActivity() {
             )
                 .setMessage("Deseja concluir esta compra?")
                 .setTitle("Concluir Compra")
-                .setPositiveButton("SIM", null)
-                .setNegativeButton("NAO", null)
+                .setPositiveButton("CONCLUIR") { dialog, which ->
+                    val produtoDAO = ProdutoDAO(requireContext())
+
+                    if (produtoDAO.salvarCompra(compra)) {
+                        listarCallback.invoke()
+                        Toast.makeText(requireContext(), "Sucesso ao Concluir compra ", Toast.LENGTH_SHORT).show()
+                        requireActivity().finish()
+
+                    } else {
+                        Toast.makeText(requireContext(), "Falha ao Concluir compra", Toast.LENGTH_SHORT).show()
+                    }
+
+
+
+                }
+                .setNegativeButton("CANCELAR") { dialog, which ->
+
+                    Toast.makeText(context, "Conclusão cancelada", Toast.LENGTH_SHORT).show()
+                }
                 .setIcon(R.drawable.shopping_cart_check_24)
                 .create()
         }
 
     }
 
-    private fun showAlertDialog() {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
 
-        // Configurar o título e a mensagem
-        builder.setTitle("Título do Alerta")
-        builder.setMessage("Mensagem do Alerta")
-
-        // Configurar os botões do alerta
-        builder.setPositiveButton("Botão Positivo",
-            DialogInterface.OnClickListener { dialog, which ->
-                // Código a ser executado quando o botão positivo é clicado
-            })
-        builder.setNegativeButton("Botão Negativo",
-            DialogInterface.OnClickListener { dialog, which ->
-                // Código a ser executado quando o botão negativo é clicado
-            })
-
-        // Criar e exibir o AlertDialog
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -139,7 +147,12 @@ class CompraActivity : AppCompatActivity() {
         setContentView(binding.root)
         with(binding) {
             fabAdicionar.setOnClickListener {
-                val dialog = RoundedAlertDialog()
+
+
+
+                val dialog = RoundedAlertDialog(editCompra){
+                    //listar(produto.id_compra)
+                }
                 val fragmentManager: FragmentManager = supportFragmentManager
                 dialog.show(fragmentManager, "RoundedAlertDialog")
             }
@@ -184,6 +197,9 @@ class CompraActivity : AppCompatActivity() {
 
     private fun inicalizarToolbar() {
         setSupportActionBar(binding.include.toolbar)
+        val mLocale = Locale("pt", "BR")
+        val editValor  = binding.txtValor
+        editValor.addTextChangedListener(MaskMoney(editValor, mLocale))
 
     }
 
@@ -192,10 +208,11 @@ class CompraActivity : AppCompatActivity() {
         super.onStart()
         val extrasId = intent?.extras
         if (extrasId != null) {
-            idRecebido =
-                extrasId?.getInt("id")!! // Substitua "chave" pelo nome da chave que você usou
-            // Faça algo com o valor recebido
+            val compra: Compra? = intent.getParcelableExtra("compra")
+            editCompra = compra!!
+            idRecebido = compra!!.id_compra
             listar(idRecebido)
+
 
 
         } else {
@@ -261,8 +278,6 @@ class CompraActivity : AppCompatActivity() {
 
     }
 
-
-
     private fun modoEdicao(produto: Produto) {
         editMode = true
         val valor = produto.valor_produto.toString()
@@ -294,59 +309,55 @@ class CompraActivity : AppCompatActivity() {
 
     }
 
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    private fun confirmarExclusao(produto: Produto) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Confirmar exclusão")
-        builder.setMessage(
-            "Deseja realmente excluir o produto?"
-        )
-        builder.setPositiveButton(
-            "Sim"
-        ) { dialog, which ->
-            val produtoDAO = ProdutoDAO(this)
-            if (produtoDAO.remover(produto.id_produto)) {
-                listar(produto.id_compra)
-                Toast.makeText(content, "Sucesso ao remover produto ", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(content, "Falha ao remover produto", Toast.LENGTH_SHORT).show()
-            }
-
-
-        }
-        builder.setNegativeButton(
-            "Não"
-        ) { dialog, which ->
-            //empty
-        }
-        val dialog = builder.create()
-        dialog.show()
-
-    }*/
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun atualizar(produto: Produto) {
         val produtoDAO = ProdutoDAO(this)
-        val valor = binding.txtValor.text.toString().toDouble()
-        val quantidade = binding.txtQnd.text.toString().toInt()
-        val descricao = binding.txtDescricao.text.toString()
 
-        val produtoAtualizado = Produto(
-            produto.id_produto,
-            produto.id_compra,
-            descricao,
-            valor,
-            quantidade
-        )
-        if (produtoDAO.atualizar(produtoAtualizado)) {
-            listar(produto.id_compra)
-            Toast.makeText(content, "Sucesso ao atualizar produto ", Toast.LENGTH_SHORT).show()
-            editMode = false
-            binding.txtValor.requestFocus()
-            binding.btnSalvar.text = "INCLUIR"
-            limparCampos()
+        if(binding.txtValor.text?.isNotEmpty() == true){
+            val valorNumericoString: String =
+                binding.txtValor.text!!.replace("[^\\d,]".toRegex(), "").replace(".", "").replace(",", ".")
+            val valor = valorNumericoString.toDouble()
+            val quantidade = binding.txtQnd.text.toString().toInt()
+            val descricao = binding.txtDescricao.text.toString()
+
+            val produtoAtualizado = Produto(
+                produto.id_produto,
+                produto.id_compra,
+                descricao,
+                valor,
+                quantidade
+            )
+            if (produtoDAO.atualizar(produtoAtualizado)) {
+                listar(produto.id_compra)
+                Toast.makeText(content, "Sucesso ao atualizar produto ", Toast.LENGTH_SHORT).show()
+                editMode = false
+                binding.txtValor.requestFocus()
+                binding.btnSalvar.text = "INCLUIR"
+                limparCampos()
+            } else {
+                Toast.makeText(content, "Falha ao atualizar produto", Toast.LENGTH_SHORT).show()
+            }
+            }else{
+            Toast.makeText(this, "insira algo diferente de 0", Toast.LENGTH_SHORT).show()
+        }
+
+        val valor = binding.txtValor.text.toString().toDouble()
+
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun concluirCompra(compra: Compra) {
+        val produtoDAO = ProdutoDAO(this)
+
+
+        if (produtoDAO.salvarCompra(compra)) {
+            listar(compra.id_compra)
+            Toast.makeText(content, "Sucesso ao concluir compra ", Toast.LENGTH_SHORT).show()
+            finish()
         } else {
-            Toast.makeText(content, "Falha ao atualizar produto", Toast.LENGTH_SHORT).show()
+            Toast.makeText(content, "Falha ao concluir compra", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -354,27 +365,36 @@ class CompraActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun adicionarProduto() {
         val idCompra = idRecebido
-        val valor = binding.txtValor.text.toString().toDouble()
-        val quantidade = binding.txtQnd.text.toString().toInt()
-        val descricao = binding.txtDescricao.text.toString()
-        val produtoDAO = ProdutoDAO(content)
-        val produto = Produto(
-            -1,
-            idCompra,
-            descricao,
-            valor,
-            quantidade
-        )
-        if (produtoDAO.salvarProduto(produto)) {
-            Log.i("info_db", "Produto salvo com sucesso ")
-            Toast.makeText(content, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show()
-            listar(idCompra)
-            limparCampos()
-            binding.txtValor.requestFocus()
-        } else {
-            Log.i("info_db", "Falha ao salvar produto ")
-            Toast.makeText(content, "Falha ao salvar produto", Toast.LENGTH_SHORT).show()
+        if(binding.txtValor.text?.isNotEmpty() == true){
+            val valorNumericoString: String =
+                binding.txtValor.text!!.replace("[^\\d,]".toRegex(), "").replace(".", "").replace(",", ".")
+            val valor = valorNumericoString.toDouble()
+            val quantidade = binding.txtQnd.text.toString().toInt()
+            val descricao = binding.txtDescricao.text.toString()
+            val produtoDAO = ProdutoDAO(content)
+
+            val produto = Produto(
+                -1,
+                idCompra,
+                descricao,
+                valor,
+                quantidade
+            )
+            if (produtoDAO.salvarProduto(produto)) {
+                Log.i("info_db", "Produto salvo com sucesso ")
+                Toast.makeText(content, "Produto salvo com sucesso", Toast.LENGTH_SHORT).show()
+                listar(idCompra)
+                limparCampos()
+                binding.txtValor.requestFocus()
+            } else {
+                Log.i("info_db", "Falha ao salvar produto ")
+                Toast.makeText(content, "Falha ao salvar produto", Toast.LENGTH_SHORT).show()
+            }
+            }else{
+            binding.txtInputValor.error = "Insira um valor diferente de 0"
         }
+
+
 
     }
 
@@ -383,6 +403,7 @@ class CompraActivity : AppCompatActivity() {
             binding.txtValor.setText("")
             binding.txtQnd.setText("1")
             binding.txtDescricao.setText("")
+            txtQntIncremento = 1
         }
     }
 

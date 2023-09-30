@@ -1,18 +1,28 @@
 package com.skydevices.marketcalc.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.skydevices.marketcalc.R
 import com.skydevices.marketcalc.databinding.ItemCompraBinding
 import com.skydevices.marketcalc.model.Compra
 
 class compraAdapter(
+    private val context: Context,
     private var listaProduto: List<Compra> = listOf(),
-    private val clique: (String) -> Unit
+    private val clique: (Compra) -> Unit,
+
 
 ) : Adapter<compraAdapter.ProdutoViewHolder>() {
+
+    fun getItem(position: Int): Compra {
+        return this.listaProduto[position]
+    }
 
     fun adicionarLista(lista: List<Compra>) {
         this.listaProduto = lista
@@ -31,11 +41,21 @@ class compraAdapter(
         @SuppressLint("SetTextI18n")
         fun binding(compra: Compra) {
             binding.txtIdCompra.text = "compra nº ${compra.id_compra}"
-            binding.txtDataCompra.text = "Data da compra: ${compra.data_compra}"
+            binding.txtDataCompra.text = "Data: ${compra.data_compra}"
             binding.txtValor.text = "R$ ${String.format("%.2f", compra.total_compra)}"
-            binding.txtStatus.text = if (compra.status_compra == 0) "em Andamento" else "Concluido"
+
+            val drawableCheck: Drawable? = ContextCompat.getDrawable(context, R.drawable.check_circle_24)
+            val drawableAlert: Drawable? = ContextCompat.getDrawable(context, R.drawable.exclamation_24)
+
+            if(compra.status_compra == 0){
+                binding.txtStatus.text = "Status: "
+                binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
+            }else{
+                binding.txtStatus.text = "Status: "
+                binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
+            }
             binding.ClItemCompra.setOnClickListener {
-                clique("${compra.id_compra}")
+                clique(compra)
             }
         }
 
