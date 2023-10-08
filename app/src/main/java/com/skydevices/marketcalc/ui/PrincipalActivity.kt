@@ -2,6 +2,7 @@ package com.skydevices.marketcalc.ui
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
@@ -90,8 +91,8 @@ class SwipeCallback(
             actionState,
             isCurrentlyActive
         )
-            .addSwipeLeftBackgroundColor(ContextCompat.getColor(context, color.secundaria))
             .addSwipeLeftActionIcon(R.drawable.trash_24)
+            .addSwipeLeftLabel("Excluir")
             .create()
             .decorate()
 
@@ -129,9 +130,8 @@ class PrincipalActivity : AppCompatActivity() {
             },
             recyclerView = binding.rvCompras,
             canSwipeLeftFunction = { position ->
-                // Implemente aqui a lógica para verificar se o item pode ser deslizado para a esquerda
-                // Retorne true se o item puder ser deslizado para a esquerda, false caso contrário
-                true // Ou use sua própria lógica de verificação
+
+                true
             }
         )
 
@@ -163,7 +163,7 @@ class PrincipalActivity : AppCompatActivity() {
 
         val retornoDao = produtoDAO.iniciarCompra(compra)
         if (retornoDao != 0) {
-            iniciarIntent(compra)
+            iniciarIntent(compra,CompraActivity::class.java)
         } else {
             Toast.makeText(this, "Falha ao iniciar compra", Toast.LENGTH_SHORT).show()
         }
@@ -182,16 +182,21 @@ class PrincipalActivity : AppCompatActivity() {
         val produtoDAO = ProdutoDAO(this)
         val listaProdutos = produtoDAO.listaHistorico()
         itemAdapter = compraAdapter(this) { compra ->
+            if(compra.status_compra == 1){
 
-            iniciarIntent(compra)
+            }else{
+                iniciarIntent(compra,CompraActivity::class.java)
+            }
+
+
         }
         itemAdapter?.adicionarLista(listaProdutos)
 
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun iniciarIntent(compra : Compra) {
-        intent = Intent(this, CompraActivity::class.java)
+    fun iniciarIntent(compra: Compra, activity: Class<*>) {
+        intent = Intent(this, activity)
         intent.putExtra("compra", compra)
         startActivity(intent)
     }

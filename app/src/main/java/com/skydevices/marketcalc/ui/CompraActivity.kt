@@ -341,7 +341,7 @@ class CompraActivity : AppCompatActivity() {
             Toast.makeText(this, "insira algo diferente de 0", Toast.LENGTH_SHORT).show()
         }
 
-        val valor = binding.txtValor.text.toString().toDouble()
+
 
 
 
