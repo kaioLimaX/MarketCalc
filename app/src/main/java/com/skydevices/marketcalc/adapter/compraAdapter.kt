@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.skydevices.marketcalc.R
+import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.databinding.ItemCompraBinding
 import com.skydevices.marketcalc.model.Compra
 
@@ -18,7 +19,7 @@ class compraAdapter(
     private val clique: (Compra) -> Unit,
 
 
-) : Adapter<compraAdapter.ProdutoViewHolder>() {
+    ) : Adapter<compraAdapter.ProdutoViewHolder>() {
 
     fun getItem(position: Int): Compra {
         return this.listaProduto[position]
@@ -40,8 +41,11 @@ class compraAdapter(
 
         @SuppressLint("SetTextI18n")
         fun binding(compra: Compra) {
+            val dateFormatter = Formatters()
+            val dataFormatada = dateFormatter.formatarData(compra.data_compra.toString())
+
             binding.txtIdCompra.text = "compra nº ${compra.id_compra}"
-            binding.txtDataCompra.text = "Data: ${compra.data_compra}"
+            binding.txtDataCompra.text = "Data: ${dataFormatada}"
             binding.txtValor.text = "R$ ${String.format("%.2f", compra.total_compra)}"
 
             val drawableCheck: Drawable? = ContextCompat.getDrawable(context, R.drawable.check_circle_24)

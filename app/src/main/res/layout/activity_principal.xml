@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.PrincipalActivity">
+    tools:context=".ui.PrincipalActivity1">
 
     <include
         android:id="@+id/includeToolbar"
@@ -39,4 +39,5 @@
         app:layout_constraintTop_toBottomOf="@+id/includeToolbar"
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_compra" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

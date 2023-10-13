@@ -1,4 +1,4 @@
-package com.skydevices.marketcalc.database
+package com.skydevices.marketcalc.model.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import java.sql.Date
+import com.skydevices.marketcalc.presenter.principal.PrincipalPresenter
 import java.time.LocalDate
 
-class DatabaseHelper(context:Context): SQLiteOpenHelper(// databaseHelper herda de SqLiteOpenHelper
+class DatabaseHelper(context: Context): SQLiteOpenHelper(// databaseHelper herda de SqLiteOpenHelper
 
     context, "loja.db", null, 2//vc tem que passar o conteudo, Nome do banco de dados, CursosFactory e a versao do banco
 
@@ -50,8 +50,10 @@ class DatabaseHelper(context:Context): SQLiteOpenHelper(// databaseHelper herda 
 
 
         try { // try é um comando necessario para tratamento de erros de retorno de funções
-            db?.execSQL(sql) // comando para executar linha de codigo mysql
-            db?.execSQL(sql2)
+            db?.apply {
+                execSQL(sql)
+                execSQL(sql2)
+            }
             Log.i("info_db", "Sucesso ao criar Tabela ")
         }catch (e : Exception){ // catch captura a excessao(erro) caso o comando execSQL retornar
             e.printStackTrace()

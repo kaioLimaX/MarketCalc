@@ -9,4 +9,8 @@
         <item name="cornerSize">16dp</item>
     </style>
 
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
 </resources>

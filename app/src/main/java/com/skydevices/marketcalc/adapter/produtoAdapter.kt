@@ -1,8 +1,6 @@
 package com.skydevices.marketcalc.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -10,14 +8,12 @@ import com.skydevices.marketcalc.databinding.ItemProdutoBinding
 import com.skydevices.marketcalc.model.Produto
 
 
-class itemAdapter(
+class produtoAdapter(
     val onClickExcluir: (Produto) -> Unit,
 
     val onClickEditar : (Produto) -> Unit
 
-) : Adapter<itemAdapter.ProdutoViewHolder>() {
-
-
+) : Adapter<produtoAdapter.ProdutoViewHolder>() {
 
     private var listaProduto: List<Produto> = listOf()
 

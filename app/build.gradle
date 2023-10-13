@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+     var roomVersion = "2.4.1"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.4'

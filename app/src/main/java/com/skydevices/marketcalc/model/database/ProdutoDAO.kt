@@ -1,23 +1,21 @@
-package com.skydevices.marketcalc.database
+package com.skydevices.marketcalc.model.database
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
-import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
-import com.skydevices.marketcalc.ui.CompraActivity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
 
-@ExperimentalBadgeUtils class ProdutoDAO(context: Context) : iProdutoDAO {
+@ExperimentalBadgeUtils
+class ProdutoDAO(context: Context) : iProdutoDAO {
 
     private val escrita = DatabaseHelper(context).writableDatabase
     private val leitura = DatabaseHelper(context).readableDatabase
@@ -183,13 +181,6 @@ import java.time.format.DateTimeFormatter
                 Produto(idProduto,idCompra,descricao, valor, quantidade)
             )
 
-
-
-
-
-
-
-
         }
         var atualizaValorTotal = "UPDATE ${DatabaseHelper.TABELA_COMPRAS}\n" +
                 "SET ${DatabaseHelper.VALOR_TOTAL} = (\n" +
@@ -201,6 +192,15 @@ import java.time.format.DateTimeFormatter
         escrita.execSQL(atualizaValorTotal)
         return listaProdutos
 
+    }
+
+    fun calcularValorTotal(listaCompra: List<Produto>): Double {
+        var resultado = 0.0
+        for (produto in listaCompra) {
+            val resultadoItem = produto.valor_produto * produto.qtd_produto
+            resultado += resultadoItem
+        }
+        return resultado
     }
 
     override fun salvarCompra(compra: Compra): Boolean {
@@ -266,6 +266,8 @@ import java.time.format.DateTimeFormatter
         return listaHistorico
 
     }
+
+
 
 
 

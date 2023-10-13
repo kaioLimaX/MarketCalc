@@ -1,4 +1,4 @@
-package com.skydevices.marketcalc.database
+package com.skydevices.marketcalc.model.database
 
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
