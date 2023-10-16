@@ -44,19 +44,24 @@ class compraAdapter(
             val dateFormatter = Formatters()
             val dataFormatada = dateFormatter.formatarData(compra.data_compra.toString())
 
-            binding.txtIdCompra.text = "compra nº ${compra.id_compra}"
-            binding.txtDataCompra.text = "Data: ${dataFormatada}"
+            binding.txtIdCompra.text = "Compra nº ${compra.id_compra}"
             binding.txtValor.text = "R$ ${String.format("%.2f", compra.total_compra)}"
+            binding.txtData.text = "${dataFormatada}"
+
 
             val drawableCheck: Drawable? = ContextCompat.getDrawable(context, R.drawable.check_circle_24)
             val drawableAlert: Drawable? = ContextCompat.getDrawable(context, R.drawable.exclamation_24)
 
             if(compra.status_compra == 0){
-                binding.txtStatus.text = "Status: "
-                binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
+               // binding.txtStatus.text = "Status: "
+               // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
+                binding.imgStatus.setImageResource(R.drawable.exclamation_24)
+                binding.txtStatus.text = "em andamento"
             }else{
-                binding.txtStatus.text = "Status: "
-                binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
+               // binding.txtStatus.text = "Status: "
+               // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
+                binding.imgStatus.setImageResource(R.drawable.check_circle_24)
+                binding.txtStatus.text = "concluida"
             }
             binding.ClItemCompra.setOnClickListener {
                 clique(compra)

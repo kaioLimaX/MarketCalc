@@ -21,17 +21,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:text="Compra nº"
+            android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4" />
+            app:layout_constraintStart_toEndOf="@+id/imgStatus"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txtDataCompra"
+            android:id="@+id/txtStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Data : 19/09/2023"
-            app:layout_constraintBottom_toBottomOf="@+id/txtValor"
             app:layout_constraintStart_toStartOf="@+id/txtIdCompra"
             app:layout_constraintTop_toBottomOf="@+id/txtIdCompra" />
 
@@ -39,38 +40,33 @@
             android:id="@+id/txtValor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
             android:text="R$ 999.99"
-            android:textSize="16sp"
+            android:textAlignment="viewEnd"
+            android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/txtStatus"
-            app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtIdCompra" />
 
         <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/imgStatus"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtStatus"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/shopping_cart_24" />
+            app:layout_constraintTop_toTopOf="@+id/txtIdCompra"
+            app:srcCompat="@drawable/exclamation_24" />
 
         <TextView
-            android:id="@+id/txtStatus"
+            android:id="@+id/txtData"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:drawableRight="@drawable/check_circle_24"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:text="Status"
-            app:layout_constraintBottom_toTopOf="@+id/txtValor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txtValor"
+            app:layout_constraintTop_toBottomOf="@+id/txtValor" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

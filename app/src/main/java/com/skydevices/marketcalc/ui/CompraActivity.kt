@@ -3,6 +3,7 @@ package com.skydevices.marketcalc.ui
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.doOnPreDraw
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.BadgeDrawable
@@ -11,9 +12,13 @@ import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.R
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.Utils.MaskMoney
+import com.skydevices.marketcalc.Utils.dialogs.DialogData
+import com.skydevices.marketcalc.Utils.dialogs.RoundedAlertDialog
+
+import com.skydevices.marketcalc.Utils.swipe.SwipeActionListener
+import com.skydevices.marketcalc.Utils.swipe.SwipeCallback
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
-import com.skydevices.marketcalc.dialogs.RoundedAlertDialog
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
 import com.skydevices.marketcalc.presenter.compra.CompraHome
@@ -21,13 +26,15 @@ import com.skydevices.marketcalc.presenter.compra.CompraPresenter
 import java.util.Locale
 
 @ExperimentalBadgeUtils
-class CompraActivity : AbstractActivity(), CompraHome {
+class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     private lateinit var binding: ActivityCompraBinding
     override fun getLayout(): ViewBinding {
         binding = ActivityCompraBinding.inflate(layoutInflater)
         return binding
     }
+
+    private lateinit var swipeCallback: SwipeCallback
 
     private lateinit var compraPresenter: CompraPresenter
 
@@ -115,6 +122,17 @@ class CompraActivity : AbstractActivity(), CompraHome {
             layoutManager = LinearLayoutManager(this@CompraActivity)
         }
 
+        swipeCallback = SwipeCallback(this,this)
+
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(binding.rvLista)
+
+
+
+    }
+
+    override fun finalizarActivity(){
+        finish()
     }
 
     override fun exibirCompra(listaCompra: List<Produto>) {
@@ -142,14 +160,18 @@ class CompraActivity : AbstractActivity(), CompraHome {
 
     override fun exibirFinalizar(compra: Compra) {
         val dialogFragment = RoundedAlertDialog(
-            "Concluir compra",
-            "Deseja concluir esta compra ?",
-            "CONCLUIR",
-            R.drawable.shopping_cart_check_24
-        ) {
-            compraPresenter.finalizarCompra(compra)
-        }
-        dialogFragment.show(supportFragmentManager, "ExclusaoProdutoDialog")
+            DialogData.dialogConcluir.title,
+            DialogData.dialogConcluir.message,
+            DialogData.dialogConcluir.buttonText,
+            DialogData.dialogConcluir.iconResId,
+            {//onPositive
+                compraPresenter.finalizarCompra(compra)
+            },
+            {//onNegative
+
+            }
+        )
+        dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
     }
 
     override fun adicionarProduto(
@@ -169,7 +191,27 @@ class CompraActivity : AbstractActivity(), CompraHome {
     override fun excluirProduto(produto: Produto) {
         TODO("Not yet implemented")
     }
-}
+
+    override fun onSwipeLeft(position: Int) {
+        val dialogFragment = RoundedAlertDialog(
+            DialogData.dialogExcluir.title,
+            DialogData.dialogExcluir.message,
+            DialogData.dialogExcluir.buttonText,
+            DialogData.dialogExcluir.iconResId,
+            {//onPositive
+
+            },
+            {//onNegative or Cancel
+                binding.rvLista.adapter?.notifyItemChanged(position)
+            }
+        )
+        dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
+    }
+    }
+
+
+
+
 
 
 

@@ -58,7 +58,8 @@ class CompraPresenter(
         if (compra.total_compra != 0.0) {
             if (produtoDAO.salvarCompra(compra)) {
                 Toast.makeText(context, "Sucesso ao Concluir compra ", Toast.LENGTH_SHORT).show()
-                compraHome
+                compraHome.finalizarActivity()
+
 
             } else {
                 Toast.makeText(context, "Falha ao Concluir compra", Toast.LENGTH_SHORT).show()

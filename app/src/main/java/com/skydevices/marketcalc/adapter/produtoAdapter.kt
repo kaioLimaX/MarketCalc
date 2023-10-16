@@ -24,6 +24,7 @@ class produtoAdapter(
         notifyDataSetChanged()
     }
 
+
     inner class ProdutoViewHolder(itemBinding: ItemProdutoBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 

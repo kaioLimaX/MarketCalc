@@ -50,7 +50,17 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         return true
     }
 
-    override fun iniciarCompra(compra: Compra) : Int{
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun iniciarCompra() : Int{
+        val dataAtual = LocalDate.now()
+
+        val compra = Compra(
+            -1,
+            0,
+            dataAtual,
+            0.0
+        )
+
 
         val valores = ContentValues()
         valores.put(DatabaseHelper.STATUS_COMPRA, compra.status_compra)
@@ -202,6 +212,9 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         }
         return resultado
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+
 
     override fun salvarCompra(compra: Compra): Boolean {
 

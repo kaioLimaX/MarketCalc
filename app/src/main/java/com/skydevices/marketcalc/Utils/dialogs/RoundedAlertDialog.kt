@@ -1,7 +1,8 @@
 
 
-package com.skydevices.marketcalc.dialogs
+package com.skydevices.marketcalc.Utils.dialogs
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -17,10 +18,13 @@ class RoundedAlertDialog(
     private val message : String,
     private val textButton :  String,
     private val icon : Int,
-    private val onClickPositive: () -> Unit
+    private val onClickPositive: () -> Unit,
+    private val onClickNegative: () -> Unit
+
 ) : DialogFragment() {
     //...
 
+    @SuppressLint("DialogFragmentCallbacksDetector")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialAlertDialogBuilder(
             requireActivity(),
@@ -33,7 +37,10 @@ class RoundedAlertDialog(
                 onClickPositive.invoke()
             }
             .setNegativeButton("CANCELAR") { dialog, which ->
-                //empty
+                onClickNegative.invoke()
+            }
+            .setOnCancelListener(){
+                onClickNegative.invoke()
             }
             .create()
     }

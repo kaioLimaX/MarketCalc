@@ -1,3 +1,4 @@
+/*
 package com.skydevices.marketcalc.ui
 
 
@@ -24,7 +25,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class SwipeCallback(
     private val context: Context,
-    private val onSwipeLeftListener: (position: Int, compra: Compra) -> Unit,
+    private val onSwipeLeftListener: (position: Int, ) -> Unit,
     private val recyclerView: RecyclerView,
     private val canSwipeLeftFunction: (position: Int) -> Boolean
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -144,7 +145,8 @@ class PrincipalActivity1 : AppCompatActivity() {
         binding.rvCompras.layoutManager = LinearLayoutManager(this)
     }
 
-   /* @RequiresApi(Build.VERSION_CODES.O)
+   */
+/* @RequiresApi(Build.VERSION_CODES.O)
     private fun iniciarCompra() {
         val produtoDAO = ProdutoDAO(this)
         val dataAtual = LocalDate.now()
@@ -166,7 +168,8 @@ class PrincipalActivity1 : AppCompatActivity() {
             Toast.makeText(this, "Falha ao iniciar compra", Toast.LENGTH_SHORT).show()
         }
 
-    }*/
+    }*//*
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun inicializarToolbar() {
@@ -176,7 +179,8 @@ class PrincipalActivity1 : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    /* fun listarCompras() {
+    */
+/* fun listarCompras() {
 
         val produtoDAO = ProdutoDAO(this)
         val listaProdutos = produtoDAO.listaHistorico()
@@ -191,7 +195,8 @@ class PrincipalActivity1 : AppCompatActivity() {
         }
         itemAdapter?.adicionarLista(listaProdutos)
 
-    }*/
+    }*//*
+
 
     @SuppressLint("SuspiciousIndentation")
     fun iniciarIntent(compra: Compra, activity: Class<*>) {
@@ -199,4 +204,4 @@ class PrincipalActivity1 : AppCompatActivity() {
         intent.putExtra("compra", compra)
         startActivity(intent)
     }
-}
+}*/

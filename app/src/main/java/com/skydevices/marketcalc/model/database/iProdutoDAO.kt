@@ -9,7 +9,7 @@ interface iProdutoDAO {
     fun atualizar (produto: Produto): Boolean
     fun remover (int: Int): Boolean
     fun listar(id: Int): List<Produto>
-    fun iniciarCompra(compra: Compra) : Int
+    fun iniciarCompra() : Int
     fun salvarCompra (compra: Compra): Boolean
     fun listaHistorico(): List<Compra>
 

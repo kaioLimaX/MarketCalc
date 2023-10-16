@@ -9,9 +9,11 @@ interface CompraHome {
     fun exibirTotal(valorTotal: Double)
     fun atualizarBadge(numeroItens: Int)
     fun exibirFinalizar(compra: Compra)
+    fun finalizarActivity()
     fun adicionarProduto(idRecebido : Int,valor: Double, quantidade: Int, descricao: String)
     fun atualizarProduto(produto: Produto)
     fun excluirProduto(produto : Produto)
+    fun onSwipeLeft(position: Int)
 
 
 
