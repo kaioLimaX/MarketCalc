@@ -1,4 +1,4 @@
-package com.skydevices.marketcalc.Utils.swipe
+package com.skydevices.marketcalc.Utils.swipeExcluir
 
 import android.content.Context
 import android.graphics.Canvas

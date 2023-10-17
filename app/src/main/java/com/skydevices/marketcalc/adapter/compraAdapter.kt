@@ -30,6 +30,9 @@ class compraAdapter(
         notifyDataSetChanged()
     }
 
+
+
+
     inner class ProdutoViewHolder(itemBinding: ItemCompraBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
@@ -49,9 +52,6 @@ class compraAdapter(
             binding.txtData.text = "${dataFormatada}"
 
 
-            val drawableCheck: Drawable? = ContextCompat.getDrawable(context, R.drawable.check_circle_24)
-            val drawableAlert: Drawable? = ContextCompat.getDrawable(context, R.drawable.exclamation_24)
-
             if(compra.status_compra == 0){
                // binding.txtStatus.text = "Status: "
                // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
@@ -66,6 +66,8 @@ class compraAdapter(
             binding.ClItemCompra.setOnClickListener {
                 clique(compra)
             }
+
+
         }
 
     }

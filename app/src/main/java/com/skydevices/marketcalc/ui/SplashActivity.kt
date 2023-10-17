@@ -25,6 +25,10 @@ import com.skydevices.marketcalc.databinding.ActivitySplashBinding
         },3000)
     }
 
+    override fun onStartActivity() {
+
+    }
+
 
 }
 

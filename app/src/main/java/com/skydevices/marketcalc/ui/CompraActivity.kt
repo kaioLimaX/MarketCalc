@@ -1,7 +1,8 @@
 package com.skydevices.marketcalc.ui
 
+import android.os.Build
 import android.util.Log
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,14 +10,13 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
-import com.skydevices.marketcalc.R
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.Utils.MaskMoney
 import com.skydevices.marketcalc.Utils.dialogs.DialogData
 import com.skydevices.marketcalc.Utils.dialogs.RoundedAlertDialog
+import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeActionListener
 
-import com.skydevices.marketcalc.Utils.swipe.SwipeActionListener
-import com.skydevices.marketcalc.Utils.swipe.SwipeCallback
+import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
 import com.skydevices.marketcalc.model.Compra
@@ -34,7 +34,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         return binding
     }
 
-    private lateinit var swipeCallback: SwipeCallback
+    private lateinit var swipeCallback: SwipeActionListener
 
     private lateinit var compraPresenter: CompraPresenter
 
@@ -61,7 +61,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         recuperarDadosActivity()
 
         badgeDrawable = BadgeDrawable.create(this)
-        compraPresenter = CompraPresenter(this, applicationContext)
+        compraPresenter = CompraPresenter(this, applicationContext, produtoAdapter!!)
         compraPresenter.exibirCompra(idRecebido)
 
         binding.btnSalvar.setOnClickListener {
@@ -76,11 +76,16 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
                 quantidade,
                 descricao
             )
+            binding.rvLista.scrollToPosition(0)
         }
 
         binding.fabAdicionar.setOnClickListener {
             compraPresenter.exibirDialogFinalizar(editCompra)
         }
+    }
+
+    override fun onStartActivity() {
+
     }
 
     private fun inicializarView() {
@@ -106,36 +111,27 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
     }
 
     private fun configRecycler() {
-        produtoAdapter = produtoAdapter(
-            onClickExcluir = { produto ->
-                //confirmarExclusao(produto)
+        produtoAdapter = produtoAdapter{editProduto->
 
+        }
 
-            },
-            onClickEditar = { produto ->
-                //  modoEdicao(produto)
-
-            }
-        )
-        with(binding.rvLista) {
+        with(binding.rvLista){
             adapter = produtoAdapter
             layoutManager = LinearLayoutManager(this@CompraActivity)
         }
 
-        swipeCallback = SwipeCallback(this,this)
+        val swipeCallback = SwipeCallback(this, this)
 
+        // Anexe o SwipeCallback ao ItemTouchHelper
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
         itemTouchHelper.attachToRecyclerView(binding.rvLista)
-
-
-
     }
 
     override fun finalizarActivity(){
         finish()
     }
 
-    override fun exibirCompra(listaCompra: List<Produto>) {
+    override fun exibirCompra(listaCompra: MutableList<Produto>) {
 
         produtoAdapter?.adicionarLista(listaCompra)
         compraPresenter.atualizarBadgeETotal(listaCompra)
@@ -158,7 +154,8 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     }
 
-    override fun exibirFinalizar(compra: Compra) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun exibirFinalizarCompra(compra: Compra) {
         val dialogFragment = RoundedAlertDialog(
             DialogData.dialogConcluir.title,
             DialogData.dialogConcluir.message,
@@ -174,12 +171,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
     }
 
-    override fun adicionarProduto(
-        idRecebido: Int,
-        valor: Double,
-        quantidade: Int,
-        descricao: String
-    ) {
+    override fun adicionarProduto(idRecebido: Int,valor: Double,quantidade: Int, descricao: String) {
 
         compraPresenter.adicionarProduto(idRecebido, valor, quantidade, descricao)
     }
@@ -188,8 +180,9 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         TODO("Not yet implemented")
     }
 
-    override fun excluirProduto(produto: Produto) {
-        TODO("Not yet implemented")
+    override fun excluirProduto(position : Int) {
+        compraPresenter.excluirProduto(position)
+
     }
 
     override fun onSwipeLeft(position: Int) {
@@ -199,6 +192,9 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             DialogData.dialogExcluir.buttonText,
             DialogData.dialogExcluir.iconResId,
             {//onPositive
+               val idProduto = position
+                excluirProduto(idProduto)
+                binding.rvLista.adapter?.notifyItemRemoved(position)
 
             },
             {//onNegative or Cancel
@@ -207,7 +203,8 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         )
         dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
     }
-    }
+
+}
 
 
 

@@ -1,24 +1,21 @@
 package com.skydevices.marketcalc.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.ExperimentalBadgeUtils
-import com.skydevices.marketcalc.Utils.swipe.SwipeActionListener
-import com.skydevices.marketcalc.Utils.swipe.SwipeCallback
+import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
 import com.skydevices.marketcalc.adapter.compraAdapter
 import com.skydevices.marketcalc.databinding.ActivityPrincipalBinding
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.presenter.principal.PrincipalHome
 import com.skydevices.marketcalc.presenter.principal.PrincipalPresenter
-import java.time.LocalDate
 
 @ExperimentalBadgeUtils
-class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener {
+class PrincipalActivity : AbstractActivity(), PrincipalHome{
 
     private lateinit var binding: ActivityPrincipalBinding
 
@@ -52,6 +49,11 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
 
     }
 
+    @SuppressLint("NewApi")
+    override fun onStartActivity() {
+        principalPresenter.recuperarCompras()
+    }
+
     private fun configRecycler() {
         compraAdapter = compraAdapter(this) { compra ->
             if (compra.status_compra == 1) {
@@ -65,10 +67,10 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
             layoutManager = LinearLayoutManager(this@PrincipalActivity)
         }
 
-        swipeCallback = SwipeCallback(this,this)
+       /* swipeCallback = SwipeCallback(this,this)
 
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
-        itemTouchHelper.attachToRecyclerView(binding.rvCompras)
+        itemTouchHelper.attachToRecyclerView(binding.rvCompras)*/
 
     }
 
@@ -102,7 +104,5 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
         startActivity(intent)
     }
 
-    override fun onSwipeLeft(position: Int) {
-        Toast.makeText(this, "$position", Toast.LENGTH_SHORT).show()
-    }
+
 }

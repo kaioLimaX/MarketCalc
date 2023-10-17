@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
     layout_height="match_parent"
     layout_width="match_parent"
     android:layout_width="match_parent"
@@ -11,11 +12,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
-        android:focusable="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:focusable="true">
 
         <TextView
             android:id="@+id/txtProduto"
@@ -43,19 +44,12 @@
             android:id="@+id/txtTotalItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginEnd="16dp"
             android:text="R$ 99,99"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/txtQuantidade"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txtProduto" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.76" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

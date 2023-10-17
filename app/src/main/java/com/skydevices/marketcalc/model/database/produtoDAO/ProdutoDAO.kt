@@ -1,4 +1,4 @@
-package com.skydevices.marketcalc.model.database
+package com.skydevices.marketcalc.model.database.produtoDAO
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
+import com.skydevices.marketcalc.model.database.DatabaseHelper
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -135,6 +136,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
     override fun remover(id: Int): Boolean {
 
+
         val args = arrayOf(id.toString())
 
         try {
@@ -144,6 +146,8 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
                 args
 
             )
+
+            atualizarTotal()
 
             Log.i("info_db", "Sucesso ao Remover Produto ") // log do sistema
 
@@ -157,7 +161,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         return true
     }
 
-    override fun listar(id : Int): List<Produto> {
+    override fun listar(id : Int): MutableList<Produto> {
         val listaProdutos = mutableListOf<Produto>()
 
         val sql =
@@ -192,6 +196,14 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
             )
 
         }
+
+        atualizarTotal()
+
+        return listaProdutos
+
+    }
+
+    fun atualizarTotal(){
         var atualizaValorTotal = "UPDATE ${DatabaseHelper.TABELA_COMPRAS}\n" +
                 "SET ${DatabaseHelper.VALOR_TOTAL} = (\n" +
                 "    SELECT COALESCE(SUM(${DatabaseHelper.VALOR} * ${DatabaseHelper.QUANTIDADE}), 0)\n" +
@@ -200,8 +212,6 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
                 ")"
 
         escrita.execSQL(atualizaValorTotal)
-        return listaProdutos
-
     }
 
     fun calcularValorTotal(listaCompra: List<Produto>): Double {

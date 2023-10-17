@@ -6,9 +6,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.model.Compra
-import com.skydevices.marketcalc.model.database.ProdutoDAO
+import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.ui.CompraActivity
-import com.skydevices.marketcalc.ui.PrincipalActivity
 import java.time.LocalDate
 
 @ExperimentalBadgeUtils class PrincipalPresenter(
@@ -18,10 +17,10 @@ import java.time.LocalDate
 
     ) {
 
-    val produtoDAO = ProdutoDAO(context)
+    val compraDAO = ProdutoDAO(context)
         @RequiresApi(Build.VERSION_CODES.O)
         fun recuperarCompras(){
-            val listaProdutos = produtoDAO.listaHistorico()
+            val listaProdutos = compraDAO.listaHistorico()
             principalHome.exibirCompras(listaProdutos)
 
 
@@ -29,7 +28,7 @@ import java.time.LocalDate
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun novaCompra(){
-            val retornoDao = produtoDAO.iniciarCompra()
+            val retornoDao = compraDAO.iniciarCompra()
 
             if (retornoDao != 0) {
                 val compra = Compra(-1, 0, LocalDate.now(), 0.0)

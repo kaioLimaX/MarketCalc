@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.adapter.produtoAdapter
-import com.skydevices.marketcalc.model.database.ProdutoDAO
+import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.databinding.ActivityResumoBinding
 import com.skydevices.marketcalc.model.Compra
 
@@ -57,27 +57,26 @@ import com.skydevices.marketcalc.model.Compra
 
 
     fun listar(id: Int) {
-        var resultado = 0.00
+        /*var resultado = 0.00
         val produtoDAO = ProdutoDAO(this)
         val listaProdutos = produtoDAO.listar(id)
         itemAdapter = produtoAdapter(
             onClickExcluir = { produto ->
 
-            },
-            onClickEditar = { produto ->
-
             }
-        )
+        ) { produto ->
+
+        }
         itemAdapter?.adicionarLista(listaProdutos)
         binding.rvResumo.adapter = itemAdapter
         binding.rvResumo.layoutManager = LinearLayoutManager(this)
 
-        /*binding.rvLista.addItemDecoration(
+        *//*binding.rvLista.addItemDecoration(
             DividerItemDecoration(
                 this,
                 RecyclerView.VERTICAL
             )
-        )*/
+        )*//*
 
 
         if (listaProdutos.isNotEmpty()) {
@@ -92,7 +91,7 @@ import com.skydevices.marketcalc.model.Compra
             }
         }else{
             binding.textView4.text = " R$ 00.00"
-        }
+        }*/
 
 
 

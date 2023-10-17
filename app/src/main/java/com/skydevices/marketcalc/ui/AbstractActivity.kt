@@ -13,8 +13,15 @@ abstract class AbstractActivity : AppCompatActivity(){
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        onStartActivity()
+    }
+
     protected abstract fun getLayout() : ViewBinding
 
     protected abstract fun onInject()
+
+    protected abstract fun onStartActivity()
 
 }

@@ -20,7 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.skydevices.marketcalc.R
 import com.skydevices.marketcalc.Utils.MaskMoney
 import com.skydevices.marketcalc.adapter.produtoAdapter
-import com.skydevices.marketcalc.model.database.ProdutoDAO
+import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto

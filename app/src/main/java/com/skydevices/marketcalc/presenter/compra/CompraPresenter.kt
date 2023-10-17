@@ -1,27 +1,45 @@
 package com.skydevices.marketcalc.presenter.compra
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.model.Compra
-import com.skydevices.marketcalc.model.database.ProdutoDAO
+import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.model.Produto
 
 @ExperimentalBadgeUtils
 class CompraPresenter(
     private val compraHome: CompraHome,
     private val context: Context,
+    private val adapter: produtoAdapter
 ) {
     val produtoDAO = ProdutoDAO(context)
 
+    var listaProdutos = mutableListOf<Produto>()
+
     fun exibirCompra(id: Int) {
-        val listaCompra = produtoDAO.listar(id)
-        compraHome.exibirCompra(listaCompra)
+        listaProdutos = produtoDAO.listar(id)
+        compraHome.exibirCompra(listaProdutos)
 
 
     }
+
+    fun excluirProduto(position: Int) {
+        val produto = listaProdutos.get(position)
+        produtoDAO.remover(produto.id_produto)
+        listaProdutos.removeAt(position)
+
+        val total = produtoDAO.calcularValorTotal(listaProdutos)
+
+        compraHome.atualizarBadge(listaProdutos.size)
+        compraHome.exibirTotal(total)
+
+    }
+
 
     fun atualizarBadgeETotal(listaCompra: List<Produto>) {
         if (listaCompra.isNotEmpty()) {
@@ -44,15 +62,26 @@ class CompraPresenter(
         )
 
 
+
+
         if (produtoDAO.salvarProduto(produto)) {
-            Log.i("info_db", "Produto salvo com sucesso ")
-            exibirCompra(produto.id_compra)
+            listaProdutos.add(produto)
+            compraHome.atualizarBadge(listaProdutos.size)
+
+            val resultado = produtoDAO.calcularValorTotal(listaProdutos)
+            produtoDAO.atualizarTotal()
+            compraHome.exibirTotal(resultado)
+
+            adapter.adicionarItem(produto)
+
+
         } else {
             Log.i("info_db", "Erro ao salvar Produto ")
         }
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun finalizarCompra(compra: Compra) {
 
         if (compra.total_compra != 0.0) {
@@ -70,8 +99,8 @@ class CompraPresenter(
 
     }
 
-    fun exibirDialogFinalizar(compra:Compra){
-        compraHome.exibirFinalizar(compra)
+    fun exibirDialogFinalizar(compra: Compra) {
+        compraHome.exibirFinalizarCompra(compra)
     }
 
 
