@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -15,7 +16,6 @@ import com.skydevices.marketcalc.Utils.MaskMoney
 import com.skydevices.marketcalc.Utils.dialogs.DialogData
 import com.skydevices.marketcalc.Utils.dialogs.RoundedAlertDialog
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeActionListener
-
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
@@ -37,6 +37,8 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
     private lateinit var swipeCallback: SwipeActionListener
 
     private lateinit var compraPresenter: CompraPresenter
+
+    private var linearLayoutManager: LinearLayoutManager? = null
 
     val content = this
 
@@ -79,6 +81,28 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             binding.rvLista.scrollToPosition(0)
         }
 
+        binding.rvLista.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+
+                val ultimoItemVisivel = linearLayoutManager?.findLastVisibleItemPosition()
+                val totalItens = recyclerView.adapter?.itemCount ?: 0
+
+                // Verifique se a lista é grande o suficiente para permitir rolagem
+                if (totalItens > linearLayoutManager!!.childCount) {
+                    if (totalItens - 1 == ultimoItemVisivel) {
+                        binding.fabAdicionar.hide()
+                    } else {
+                        binding.fabAdicionar.show()
+                    }
+                } else {
+                    // Se a lista for pequena, você pode optar por mostrar o botão de qualquer maneira
+                    binding.fabAdicionar.show()
+                }
+            }
+        })
+
         binding.fabAdicionar.setOnClickListener {
             compraPresenter.exibirDialogFinalizar(editCompra)
         }
@@ -111,13 +135,15 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
     }
 
     private fun configRecycler() {
-        produtoAdapter = produtoAdapter{editProduto->
+        produtoAdapter = produtoAdapter { editProduto ->
 
         }
 
-        with(binding.rvLista){
+        linearLayoutManager = LinearLayoutManager(this@CompraActivity)
+
+        with(binding.rvLista) {
             adapter = produtoAdapter
-            layoutManager = LinearLayoutManager(this@CompraActivity)
+            layoutManager = linearLayoutManager
         }
 
         val swipeCallback = SwipeCallback(this, this)
@@ -127,7 +153,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         itemTouchHelper.attachToRecyclerView(binding.rvLista)
     }
 
-    override fun finalizarActivity(){
+    override fun finalizarActivity() {
         finish()
     }
 
@@ -171,7 +197,12 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
     }
 
-    override fun adicionarProduto(idRecebido: Int,valor: Double,quantidade: Int, descricao: String) {
+    override fun adicionarProduto(
+        idRecebido: Int,
+        valor: Double,
+        quantidade: Int,
+        descricao: String
+    ) {
 
         compraPresenter.adicionarProduto(idRecebido, valor, quantidade, descricao)
     }
@@ -180,7 +211,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         TODO("Not yet implemented")
     }
 
-    override fun excluirProduto(position : Int) {
+    override fun excluirProduto(position: Int) {
         compraPresenter.excluirProduto(position)
 
     }
@@ -192,7 +223,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             DialogData.dialogExcluir.buttonText,
             DialogData.dialogExcluir.iconResId,
             {//onPositive
-               val idProduto = position
+                val idProduto = position
                 excluirProduto(idProduto)
                 binding.rvLista.adapter?.notifyItemRemoved(position)
 

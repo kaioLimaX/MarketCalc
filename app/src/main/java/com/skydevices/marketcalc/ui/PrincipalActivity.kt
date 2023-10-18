@@ -1,6 +1,5 @@
 package com.skydevices.marketcalc.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,15 +14,13 @@ import com.skydevices.marketcalc.presenter.principal.PrincipalHome
 import com.skydevices.marketcalc.presenter.principal.PrincipalPresenter
 
 @ExperimentalBadgeUtils
-class PrincipalActivity : AbstractActivity(), PrincipalHome{
+class PrincipalActivity : AbstractActivity(), PrincipalHome {
 
     private lateinit var binding: ActivityPrincipalBinding
 
     private lateinit var principalPresenter: PrincipalPresenter
 
     private var compraAdapter: compraAdapter? = null
-
-    private lateinit var swipeCallback: SwipeCallback
 
 
     override fun getLayout(): ViewBinding {
@@ -37,10 +34,9 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome{
         configRecycler()
 
 
-        principalPresenter = PrincipalPresenter(this, applicationContext)
-        principalPresenter.recuperarCompras()
 
-        with(binding){
+
+        with(binding) {
             floatingActionButton.setOnClickListener {
                 iniciarCompra()
             }
@@ -49,28 +45,29 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome{
 
     }
 
-    @SuppressLint("NewApi")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartActivity() {
+        principalPresenter = PrincipalPresenter(this, applicationContext)
         principalPresenter.recuperarCompras()
     }
 
     private fun configRecycler() {
         compraAdapter = compraAdapter(this) { compra ->
             if (compra.status_compra == 1) {
-               iniciarIntent(compra, ResumoActivity::class.java)
+                iniciarIntent(compra, ResumoActivity::class.java)
             } else {
                 iniciarIntent(compra, CompraActivity::class.java)
             }
         }
-        with(binding.rvCompras){
+        with(binding.rvCompras) {
             adapter = compraAdapter
             layoutManager = LinearLayoutManager(this@PrincipalActivity)
         }
 
-       /* swipeCallback = SwipeCallback(this,this)
+        /* swipeCallback = SwipeCallback(this,this)
 
-        val itemTouchHelper = ItemTouchHelper(swipeCallback)
-        itemTouchHelper.attachToRecyclerView(binding.rvCompras)*/
+         val itemTouchHelper = ItemTouchHelper(swipeCallback)
+         itemTouchHelper.attachToRecyclerView(binding.rvCompras)*/
 
     }
 
@@ -81,6 +78,7 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome{
         compraAdapter?.adicionarLista(compra)
 
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun iniciarCompra() {
         principalPresenter.novaCompra()
@@ -93,7 +91,6 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome{
         setContentView(binding.root)
 
         binding.includeToolbar.toolbarTitle.text = "Soma Mercado"
-
 
 
     }

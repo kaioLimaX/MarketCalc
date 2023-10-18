@@ -14,7 +14,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-
 @ExperimentalBadgeUtils
 class ProdutoDAO(context: Context) : iProdutoDAO {
 
@@ -26,10 +25,10 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         // val sql = "INSERT INTO produtos VALUES( null, '$[${produto.nome},'descricao..' )"
 
         val valores = ContentValues()
-        valores.put(DatabaseHelper.ID_COMPRA,produto.id_compra)
+        valores.put(DatabaseHelper.ID_COMPRA, produto.id_compra)
         valores.put(DatabaseHelper.VALOR, produto.valor_produto)
         valores.put(DatabaseHelper.QUANTIDADE, produto.qtd_produto)
-        valores.put(DatabaseHelper.DESCRICAO_PRODUTO,produto.descricao)
+        valores.put(DatabaseHelper.DESCRICAO_PRODUTO, produto.descricao)
 
 
 
@@ -52,7 +51,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun iniciarCompra() : Int{
+    override fun iniciarCompra(): Int {
         val dataAtual = LocalDate.now()
 
         val compra = Compra(
@@ -66,7 +65,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         val valores = ContentValues()
         valores.put(DatabaseHelper.STATUS_COMPRA, compra.status_compra)
         valores.put(DatabaseHelper.DATA_COMPRA, compra.data_compra.toString())
-        valores.put(DatabaseHelper.VALOR_TOTAL,0.0)
+        valores.put(DatabaseHelper.VALOR_TOTAL, 0.0)
 
         var novoID: Long = -1
 
@@ -86,10 +85,8 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
             Log.i("info_db", "Sucesso ao Iniciar Nova Compra, ID gerado: $novoID")
 
-           /* escrita.delete(DatabaseHelper.TABELA_PRODUTOS, null, null)
-            listar()*/
-
-
+            /* escrita.delete(DatabaseHelper.TABELA_PRODUTOS, null, null)
+             listar()*/
 
 
         } catch (e: Exception) {
@@ -104,11 +101,10 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
     override fun atualizar(produto: Produto): Boolean {
 
         val valores = ContentValues()
-        valores.put(DatabaseHelper.ID_COMPRA,  produto.id_compra)
-        valores.put(DatabaseHelper.DESCRICAO_PRODUTO,  produto.descricao)
+        valores.put(DatabaseHelper.ID_COMPRA, produto.id_compra)
+        valores.put(DatabaseHelper.DESCRICAO_PRODUTO, produto.descricao)
         valores.put(DatabaseHelper.VALOR, produto.valor_produto)
         valores.put(DatabaseHelper.QUANTIDADE, produto.qtd_produto)
-
 
 
         val args = arrayOf(produto.id_produto.toString())
@@ -152,7 +148,6 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
             Log.i("info_db", "Sucesso ao Remover Produto ") // log do sistema
 
 
-
         } catch (e: Exception) {
             Log.i("info_db", "Falha ao Remover Produto ")
 
@@ -161,7 +156,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         return true
     }
 
-    override fun listar(id : Int): MutableList<Produto> {
+    override fun listar(id: Int): MutableList<Produto> {
         val listaProdutos = mutableListOf<Produto>()
 
         val sql =
@@ -192,7 +187,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
             Log.i("info_db", "id: $idProduto valor: $valor, Descricao: $descricao ")
             listaProdutos.add(
-                Produto(idProduto,idCompra,descricao, valor, quantidade)
+                Produto(idProduto, idCompra, descricao, valor, quantidade)
             )
 
         }
@@ -203,7 +198,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
     }
 
-    fun atualizarTotal(){
+    fun atualizarTotal() {
         var atualizaValorTotal = "UPDATE ${DatabaseHelper.TABELA_COMPRAS}\n" +
                 "SET ${DatabaseHelper.VALOR_TOTAL} = (\n" +
                 "    SELECT COALESCE(SUM(${DatabaseHelper.VALOR} * ${DatabaseHelper.QUANTIDADE}), 0)\n" +
@@ -228,7 +223,8 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
     override fun salvarCompra(compra: Compra): Boolean {
 
-        val sql = "UPDATE ${DatabaseHelper.TABELA_COMPRAS} SET ${DatabaseHelper.STATUS_COMPRA} = 1 WHERE ${DatabaseHelper.ID_COMPRA} = ${compra.id_compra}"
+        val sql =
+            "UPDATE ${DatabaseHelper.TABELA_COMPRAS} SET ${DatabaseHelper.STATUS_COMPRA} = 1 WHERE ${DatabaseHelper.ID_COMPRA} = ${compra.id_compra}"
 
 
         try {
@@ -280,7 +276,7 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
 
             Log.i("info_db", "id: $idCompra valor: $valorTotal ")
             listaHistorico.add(
-                Compra(idCompra, status,localDate,valorTotal)
+                Compra(idCompra, status, localDate, valorTotal)
             )
 
 
@@ -289,10 +285,6 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         return listaHistorico
 
     }
-
-
-
-
 
 
 }

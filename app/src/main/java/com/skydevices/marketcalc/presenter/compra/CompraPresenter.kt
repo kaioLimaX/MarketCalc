@@ -8,8 +8,8 @@ import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.model.Compra
-import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.model.Produto
+import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 
 @ExperimentalBadgeUtils
 class CompraPresenter(
@@ -65,18 +65,17 @@ class CompraPresenter(
 
 
         if (produtoDAO.salvarProduto(produto)) {
-            listaProdutos.add(produto)
-            compraHome.atualizarBadge(listaProdutos.size)
+            adapter.adicionarItem(produto)
 
-            val resultado = produtoDAO.calcularValorTotal(listaProdutos)
+            val lista = adapter.recuperarLista()
+            compraHome.atualizarBadge(lista.size)
+
+            val resultado = produtoDAO.calcularValorTotal(lista)
             produtoDAO.atualizarTotal()
             compraHome.exibirTotal(resultado)
 
-            adapter.adicionarItem(produto)
-
-
         } else {
-            Log.i("info_db", "Erro ao salvar Produto ")
+            Log.i("info_db", "Erro ao salvar Produto")
         }
 
     }
@@ -84,11 +83,10 @@ class CompraPresenter(
     @RequiresApi(Build.VERSION_CODES.O)
     fun finalizarCompra(compra: Compra) {
 
-        if (compra.total_compra != 0.0) {
+        if (!listaProdutos.isEmpty()) {
             if (produtoDAO.salvarCompra(compra)) {
                 Toast.makeText(context, "Sucesso ao Concluir compra ", Toast.LENGTH_SHORT).show()
                 compraHome.finalizarActivity()
-
 
             } else {
                 Toast.makeText(context, "Falha ao Concluir compra", Toast.LENGTH_SHORT).show()

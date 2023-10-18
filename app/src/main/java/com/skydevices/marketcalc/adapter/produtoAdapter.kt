@@ -25,6 +25,10 @@ class produtoAdapter(
         notifyDataSetChanged()
     }
 
+    fun recuperarLista(): MutableList<Produto>{
+        return listaProduto
+    }
+
     fun adicionarItem(produto: Produto){
         listaProduto.add(0,produto)
         notifyItemInserted(0)
