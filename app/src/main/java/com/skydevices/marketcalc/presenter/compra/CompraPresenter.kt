@@ -22,7 +22,7 @@ class CompraPresenter(
 
     var editMode = false
 
-     var count = 0
+    var count = 0
 
     var listaProdutos = mutableListOf<Produto>()
 
@@ -38,7 +38,7 @@ class CompraPresenter(
         produtoDAO.remover(produto.id_produto)
         listaProdutos.removeAt(position)
 
-        val total = produtoDAO.calcularValorTotal(listaProdutos)
+        val total = calcularValorTotal(listaProdutos)
 
         compraHome.atualizarBadge(listaProdutos.size)
         compraHome.exibirTotal(total)
@@ -48,7 +48,7 @@ class CompraPresenter(
 
     fun atualizarBadgeETotal(listaCompra: List<Produto>) {
         if (listaCompra.isNotEmpty()) {
-            val resultado = produtoDAO.calcularValorTotal(listaCompra)
+            val resultado = calcularValorTotal(listaCompra)
             compraHome.exibirTotal(resultado)
             compraHome.atualizarBadge(listaCompra.size)
         } else {
@@ -57,30 +57,38 @@ class CompraPresenter(
         }
     }
 
-    fun processarModo(idProduto : Int, idCompra: Int, valor: Double, quantidade: Int, descricao: String){
+    fun processarModo(
+        idProduto: Int,
+        idCompra: Int,
+        valor: Double,
+        quantidade: Int,
+        descricao: String
+    ) {
 
-        Log.i("info_teste", " id do produto $idProduto")
+        if(validarCampos(valor)){
+            val produto = if (idProduto != -1) {
+                Produto(
+                    idProduto,
+                    idCompra,
+                    descricao,
+                    valor,
+                    quantidade
+                )
+            } else {
+                Produto(
+                    -1,
+                    idCompra,
+                    descricao,
+                    valor,
+                    quantidade
+                )
+            }
 
-        val produto = if (idProduto != -1){
-            Produto(
-                idProduto,
-                idCompra,
-                descricao,
-                valor,
-                quantidade)
-        } else {
-            Produto(
-                -1,
-                idCompra,
-                descricao,
-                valor,
-                quantidade)
-        }
-
-        if(editMode){
-            atualizarProduto(produto)
-        }else{
-            adicionarProduto(produto)
+            if (editMode) {
+                atualizarProduto(produto)
+            } else {
+                adicionarProduto(produto)
+            }
         }
 
     }
@@ -95,7 +103,7 @@ class CompraPresenter(
             val lista = adapter.recuperarLista()
             compraHome.atualizarBadge(lista.size)
 
-            val resultado = produtoDAO.calcularValorTotal(lista)
+            val resultado = calcularValorTotal(lista)
 
             produtoDAO.atualizarTotal()
             compraHome.exibirTotal(resultado)
@@ -108,7 +116,7 @@ class CompraPresenter(
 
     }
 
-    fun atualizarProduto(produto : Produto){
+    fun atualizarProduto(produto: Produto) {
         if (produtoDAO.atualizar(produto)) {
             editMode = false
 
@@ -117,7 +125,7 @@ class CompraPresenter(
             val lista = adapter.recuperarLista()
             compraHome.atualizarBadge(lista.size)
 
-            val resultado = produtoDAO.calcularValorTotal(lista)
+            val resultado = calcularValorTotal(lista)
             produtoDAO.atualizarTotal()
             compraHome.exibirTotal(resultado)
             compraHome.limparCampos()
@@ -128,7 +136,16 @@ class CompraPresenter(
 
     }
 
-    fun modoEdicao(produto: Produto){
+    fun calcularValorTotal(listaCompra: List<Produto>): Double {
+        var resultado = 0.0
+        for (produto in listaCompra) {
+            val resultadoItem = produto.valor_produto * produto.qtd_produto
+            resultado += resultadoItem
+        }
+        return resultado
+    }
+
+    fun modoEdicao(produto: Produto) {
 
         compraHome.modoEdicao(produto)
         editMode = true
@@ -155,8 +172,17 @@ class CompraPresenter(
         compraHome.exibirFinalizarCompra(compra)
     }
 
+    fun validarCampos(campo: Double): Boolean {
+        if (campo <= 0.00) {
+            compraHome.exibirToast("insira um valor valido vazio")
+            return false
+        }  else {
+            return true
+        }
+    }
+
     fun incrementCounter() {
-        if (count < Contants.maxValue){
+        if (count < Contants.maxValue) {
             count++
             compraHome.updateCounter(count)
         }
@@ -164,7 +190,7 @@ class CompraPresenter(
     }
 
     fun decrementCounter() {
-        if (count > Contants.minValue){
+        if (count > Contants.minValue) {
             count--
             compraHome.updateCounter(count)
         }

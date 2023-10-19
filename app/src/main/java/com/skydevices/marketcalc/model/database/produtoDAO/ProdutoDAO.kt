@@ -209,15 +209,6 @@ class ProdutoDAO(context: Context) : iProdutoDAO {
         escrita.execSQL(atualizaValorTotal)
     }
 
-    fun calcularValorTotal(listaCompra: List<Produto>): Double {
-        var resultado = 0.0
-        for (produto in listaCompra) {
-            val resultadoItem = produto.valor_produto * produto.qtd_produto
-            resultado += resultadoItem
-        }
-        return resultado
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
 
 

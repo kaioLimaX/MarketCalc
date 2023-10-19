@@ -3,9 +3,11 @@ package com.skydevices.marketcalc.ui
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeActionListener
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
 import com.skydevices.marketcalc.adapter.compraAdapter
 import com.skydevices.marketcalc.databinding.ActivityPrincipalBinding
@@ -14,14 +16,13 @@ import com.skydevices.marketcalc.presenter.principal.PrincipalHome
 import com.skydevices.marketcalc.presenter.principal.PrincipalPresenter
 
 @ExperimentalBadgeUtils
-class PrincipalActivity : AbstractActivity(), PrincipalHome {
+class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener {
 
     private lateinit var binding: ActivityPrincipalBinding
 
     private lateinit var principalPresenter: PrincipalPresenter
 
     private var compraAdapter: compraAdapter? = null
-
 
     override fun getLayout(): ViewBinding {
         binding = ActivityPrincipalBinding.inflate(layoutInflater)
@@ -64,10 +65,10 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome {
             layoutManager = LinearLayoutManager(this@PrincipalActivity)
         }
 
-        /* swipeCallback = SwipeCallback(this,this)
+         val swipeCallback = SwipeCallback(this)
 
          val itemTouchHelper = ItemTouchHelper(swipeCallback)
-         itemTouchHelper.attachToRecyclerView(binding.rvCompras)*/
+         itemTouchHelper.attachToRecyclerView(binding.rvCompras)
 
     }
 
@@ -99,6 +100,10 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome {
         val intent = Intent(this, activity)
         intent.putExtra("compra", compra)
         startActivity(intent)
+    }
+
+    override fun onSwipeLeft(pos: Int) {
+        //empty
     }
 
 

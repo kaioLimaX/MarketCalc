@@ -2,6 +2,7 @@ package com.skydevices.marketcalc.ui
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,7 +18,6 @@ import com.skydevices.marketcalc.Utils.dialogUtil.DialogData
 import com.skydevices.marketcalc.Utils.dialogUtil.RoundedAlertDialog
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeActionListener
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
-import com.skydevices.marketcalc.adapter.compraAdapter
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
 import com.skydevices.marketcalc.model.Compra
@@ -51,7 +51,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     private var txtQntIncremento = 1
 
-    var idProduto : Int = 0
+    var idProduto: Int = 0
 
     override fun onInject() {
         setContentView(binding.root)
@@ -84,7 +84,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
                 super.onScrolled(recyclerView, dx, dy)
 
 
-                val ultimoItemVisivel = linearLayoutManager?.findLastVisibleItemPosition()
+                val ultimoItemVisivel = linearLayoutManager?.findLastCompletelyVisibleItemPosition()
                 val totalItens = recyclerView.adapter?.itemCount ?: 0
 
                 // Verifique se a lista é grande o suficiente para permitir rolagem
@@ -105,7 +105,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             compraPresenter.exibirDialogFinalizar(editCompra)
         }
 
-        with(binding){
+        with(binding) {
             txtInputQtd.setEndIconOnClickListener {
                 compraPresenter.decrementCounter()
             }
@@ -156,7 +156,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             layoutManager = linearLayoutManager
         }
 
-        val swipeCallback = SwipeCallback(this, this)
+        val swipeCallback = SwipeCallback(this)
 
         // Anexe o SwipeCallback ao ItemTouchHelper
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
@@ -169,10 +169,10 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     override fun modoEdicao(produto: Produto) {
 
-            idProduto = produto.id_produto
+        idProduto = produto.id_produto
 
         Log.i("info_teste", "idproduto: ${produto.id_produto}")
-        with(binding){
+        with(binding) {
             val valor = String.format("%.2f", produto.valor_produto)
             val quantidade = produto.qtd_produto.toString()
             val descricao = produto.descricao
@@ -183,7 +183,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             txtValor.setText(valor)
             txtQnd.setText(quantidade)
             txtDescricao.setText(descricao)
-            btnSalvar.setText(button)
+            btnSalvar.text = button
         }
     }
 
@@ -235,10 +235,10 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         descricao: String
     ) {
 
-        compraPresenter.processarModo(-1,idRecebido, valor, quantidade, descricao)
+        compraPresenter.processarModo(-1, idRecebido, valor, quantidade, descricao)
     }
 
-    override fun atualizarProduto(idProduto : Int) {
+    override fun atualizarProduto(idProduto: Int) {
         val formatador = Formatters()
         val valor = formatador.formatarStringToDouble(binding.txtValor.text.toString())
         val quantidade = binding.txtQnd.text.toString().toInt()
@@ -259,9 +259,13 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     }
 
+    override fun exibirToast(mensagem: String) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show()
+    }
+
     override fun limparCampos() {
         compraPresenter.editMode = false
-        with(binding){
+        with(binding) {
             txtValor.setText("")
             txtQnd.setText("1")
             txtDescricao.setText("")

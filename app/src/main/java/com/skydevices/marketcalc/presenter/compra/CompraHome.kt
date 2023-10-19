@@ -14,6 +14,7 @@ interface CompraHome {
     fun atualizarProduto(idProduto: Int)
     fun excluirProduto(position: Int)
 
+    fun exibirToast(mensagem: String)
     fun limparCampos()
     fun updateCounter(count: Int)
     fun onSwipeLeft(position: Int)

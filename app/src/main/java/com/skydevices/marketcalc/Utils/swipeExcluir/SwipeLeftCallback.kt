@@ -8,7 +8,6 @@ import com.skydevices.marketcalc.R
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class SwipeCallback(
-    private val context: Context,
     private val swipeActionListener: SwipeActionListener
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
