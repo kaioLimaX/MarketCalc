@@ -66,7 +66,7 @@ class CompraDAO(context: Context) : ICompraDAO {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun listaHistorico(): List<Compra> {
+    override fun listaHistorico(): MutableList<Compra> {
         val listaHistorico = mutableListOf<Compra>()
 
         val sql =

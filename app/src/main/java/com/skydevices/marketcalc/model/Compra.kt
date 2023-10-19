@@ -10,7 +10,7 @@ import java.time.LocalDate
 @Parcelize
 class Compra(
     var id_compra: Int,
-    val status_compra: Int,
-    val data_compra: LocalDate,
-    val total_compra: Double
+    var status_compra: Int,
+    var data_compra: LocalDate,
+    var total_compra: Double
 ) : Parcelable

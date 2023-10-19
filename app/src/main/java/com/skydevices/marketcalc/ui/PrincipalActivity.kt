@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.skydevices.marketcalc.Utils.dialogUtil.DialogData
+import com.skydevices.marketcalc.Utils.dialogUtil.RoundedAlertDialog
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeActionListener
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
 import com.skydevices.marketcalc.adapter.compraAdapter
@@ -74,7 +76,7 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun exibirCompras(compra: List<Compra>) {
+    override fun exibirCompras(compra: MutableList<Compra>) {
 
         compraAdapter?.adicionarLista(compra)
 
@@ -85,6 +87,10 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
         principalPresenter.novaCompra()
 
 
+    }
+
+    override fun excluirCompra(position: Int) {
+        //empty
     }
 
 
@@ -103,7 +109,23 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
     }
 
     override fun onSwipeLeft(pos: Int) {
-        //empty
+        val dialogFragment = RoundedAlertDialog(
+            DialogData.dialogExcluir.title,
+            DialogData.dialogExcluir.message,
+            DialogData.dialogExcluir.buttonText,
+            DialogData.dialogExcluir.iconResId,
+            {//onPositive
+                val idProduto = pos
+                excluirCompra(idProduto)
+                compraAdapter?.removerItem(pos)
+
+            },
+            {//onNegative or Cancel
+                binding.rvCompras.adapter?.notifyItemChanged(pos)
+            }
+        )
+        dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
+
     }
 
 

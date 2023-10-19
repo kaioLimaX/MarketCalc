@@ -44,9 +44,7 @@ class produtoAdapter(
         notifyItemRemoved(position)
     }
 
-    fun atualizar(position: Int) {
-        notifyItemChanged(position)
-    }
+
 
     fun atualizarItem(produto: Produto){
         var produtoParaAtualizar = listaProduto.find { it.id_produto == produto.id_produto }

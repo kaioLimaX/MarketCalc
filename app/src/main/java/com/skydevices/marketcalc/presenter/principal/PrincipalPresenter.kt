@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.model.Compra
+import com.skydevices.marketcalc.model.database.compraDAO.CompraDAO
 import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.ui.CompraActivity
 import java.time.LocalDate
@@ -17,7 +18,7 @@ import java.time.LocalDate
 
     ) {
 
-    val compraDAO = ProdutoDAO(context)
+    val compraDAO = CompraDAO(context)
         @RequiresApi(Build.VERSION_CODES.O)
         fun recuperarCompras(){
             val listaProdutos = compraDAO.listaHistorico()

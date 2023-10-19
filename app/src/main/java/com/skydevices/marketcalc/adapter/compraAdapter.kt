@@ -12,10 +12,11 @@ import com.skydevices.marketcalc.R
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.databinding.ItemCompraBinding
 import com.skydevices.marketcalc.model.Compra
+import com.skydevices.marketcalc.model.Produto
 
 class compraAdapter(
     private val context: Context,
-    private var listaProduto: List<Compra> = listOf(),
+    private var listaProduto: MutableList<Compra> = mutableListOf(),
     private val clique: (Compra) -> Unit,
 
 
@@ -25,9 +26,30 @@ class compraAdapter(
         return this.listaProduto[position]
     }
 
-    fun adicionarLista(lista: List<Compra>) {
+    fun adicionarLista(lista: MutableList<Compra>) {
         this.listaProduto = lista
         notifyDataSetChanged()
+    }
+
+    fun removerItem(position: Int) {
+        notifyItemRemoved(position)
+    }
+
+    fun atualizarItem(compra: Compra){
+        var produtoParaAtualizar = listaProduto.find { it.id_compra == compra.id_compra }
+        val posicao = listaProduto.indexOfFirst { it.id_compra == compra.id_compra }
+
+        if (produtoParaAtualizar != null) {
+            // Realize as atualizações no produto
+            produtoParaAtualizar.data_compra = compra.data_compra
+            produtoParaAtualizar.total_compra = compra.total_compra
+            produtoParaAtualizar.status_compra = compra.status_compra
+            // Imprima a lista atualizada
+            notifyItemChanged(posicao)
+
+        } else {
+            println("Produto com ID ${compra.id_compra} não encontrado na lista.")
+        }
     }
 
 
