@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.skydevices.marketcalc.Utils.Contants
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
@@ -19,12 +20,16 @@ class CompraPresenter(
 ) {
     val produtoDAO = ProdutoDAO(context)
 
+    var editMode = false
+
+     var count = 0
+
     var listaProdutos = mutableListOf<Produto>()
+
 
     fun exibirCompra(id: Int) {
         listaProdutos = produtoDAO.listar(id)
         compraHome.exibirCompra(listaProdutos)
-
 
     }
 
@@ -52,20 +57,62 @@ class CompraPresenter(
         }
     }
 
-    fun adicionarProduto(idRecebido: Int, valor: Double, quantidade: Int, descricao: String) {
-        val produto = Produto(
-            -1,
-            idRecebido,
-            descricao,
-            valor,
-            quantidade
-        )
+    fun processarModo(idProduto : Int, idCompra: Int, valor: Double, quantidade: Int, descricao: String){
 
+        Log.i("info_teste", " id do produto $idProduto")
 
+        val produto = if (idProduto != -1){
+            Produto(
+                idProduto,
+                idCompra,
+                descricao,
+                valor,
+                quantidade)
+        } else {
+            Produto(
+                -1,
+                idCompra,
+                descricao,
+                valor,
+                quantidade)
+        }
+
+        if(editMode){
+            atualizarProduto(produto)
+        }else{
+            adicionarProduto(produto)
+        }
+
+    }
+
+    fun adicionarProduto(produto: Produto) {
 
 
         if (produtoDAO.salvarProduto(produto)) {
+            editMode = false
             adapter.adicionarItem(produto)
+
+            val lista = adapter.recuperarLista()
+            compraHome.atualizarBadge(lista.size)
+
+            val resultado = produtoDAO.calcularValorTotal(lista)
+
+            produtoDAO.atualizarTotal()
+            compraHome.exibirTotal(resultado)
+            compraHome.limparCampos()
+            compraHome.scrollRecyclerViewToPosition(0)
+
+        } else {
+            Log.i("info_db", "Erro ao salvar Produto")
+        }
+
+    }
+
+    fun atualizarProduto(produto : Produto){
+        if (produtoDAO.atualizar(produto)) {
+            editMode = false
+
+            adapter.atualizarItem(produto)
 
             val lista = adapter.recuperarLista()
             compraHome.atualizarBadge(lista.size)
@@ -73,11 +120,18 @@ class CompraPresenter(
             val resultado = produtoDAO.calcularValorTotal(lista)
             produtoDAO.atualizarTotal()
             compraHome.exibirTotal(resultado)
+            compraHome.limparCampos()
 
         } else {
             Log.i("info_db", "Erro ao salvar Produto")
         }
 
+    }
+
+    fun modoEdicao(produto: Produto){
+
+        compraHome.modoEdicao(produto)
+        editMode = true
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -99,6 +153,21 @@ class CompraPresenter(
 
     fun exibirDialogFinalizar(compra: Compra) {
         compraHome.exibirFinalizarCompra(compra)
+    }
+
+    fun incrementCounter() {
+        if (count < Contants.maxValue){
+            count++
+            compraHome.updateCounter(count)
+        }
+
+    }
+
+    fun decrementCounter() {
+        if (count > Contants.minValue){
+            count--
+            compraHome.updateCounter(count)
+        }
     }
 
 

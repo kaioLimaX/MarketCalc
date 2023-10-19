@@ -1,4 +1,4 @@
-package com.skydevices.marketcalc.Utils.dialogs
+package com.skydevices.marketcalc.Utils.dialogUtil
 
 import com.skydevices.marketcalc.R
 

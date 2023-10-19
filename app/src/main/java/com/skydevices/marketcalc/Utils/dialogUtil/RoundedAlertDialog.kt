@@ -1,17 +1,13 @@
 
 
-package com.skydevices.marketcalc.Utils.dialogs
+package com.skydevices.marketcalc.Utils.dialogUtil
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.skydevices.marketcalc.R
-import com.skydevices.marketcalc.model.Compra
-import com.skydevices.marketcalc.model.Produto
 
 class RoundedAlertDialog(
     private val title : String,

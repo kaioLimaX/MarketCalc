@@ -4,17 +4,21 @@ import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
 
 interface CompraHome {
-
-    fun exibirCompra(produto : MutableList<Produto>)
+    fun exibirCompra(produto: MutableList<Produto>)
     fun exibirTotal(valorTotal: Double)
     fun atualizarBadge(numeroItens: Int)
     fun exibirFinalizarCompra(compra: Compra)
     fun finalizarActivity()
-    fun adicionarProduto(idRecebido : Int,valor: Double, quantidade: Int, descricao: String)
-    fun atualizarProduto(produto: Produto)
+    fun modoEdicao(produto: Produto)
+    fun adicionarProduto(idRecebido: Int, valor: Double, quantidade: Int, descricao: String)
+    fun atualizarProduto(idProduto: Int)
     fun excluirProduto(position: Int)
+
+    fun limparCampos()
+    fun updateCounter(count: Int)
     fun onSwipeLeft(position: Int)
 
+    fun scrollRecyclerViewToPosition(position: Int)
 
 
 }

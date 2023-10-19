@@ -1,6 +1,7 @@
 package com.skydevices.marketcalc.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,30 +12,58 @@ import com.skydevices.marketcalc.model.Produto
 
 class produtoAdapter(
 
-    val onClickEditar : (Produto) -> Unit
+    val onClickEditar: (Produto) -> Unit
 
 ) : Adapter<produtoAdapter.ProdutoViewHolder>() {
 
     private var listaProduto: MutableList<Produto> = mutableListOf()
 
 
-
-
-    fun adicionarLista(lista : MutableList<Produto>){
+    @SuppressLint("NotifyDataSetChanged")
+    fun adicionarLista(lista: MutableList<Produto>) {
         this.listaProduto = lista
         notifyDataSetChanged()
     }
 
-    fun recuperarLista(): MutableList<Produto>{
+    fun getPosition(item: Produto): Int {
+        val posicao = listaProduto.indexOfFirst { it.id_produto == item.id_produto }
+        Log.i("teste_produto", "O produto  ID ${item.id_produto} ")
+        return posicao
+    }
+
+    fun recuperarLista(): MutableList<Produto> {
         return listaProduto
     }
 
-    fun adicionarItem(produto: Produto){
-        listaProduto.add(0,produto)
+    fun adicionarItem(produto: Produto) {
+        listaProduto.add(0, produto)
         notifyItemInserted(0)
     }
 
+    fun removerItem(position: Int) {
+        notifyItemRemoved(position)
+    }
 
+    fun atualizar(position: Int) {
+        notifyItemChanged(position)
+    }
+
+    fun atualizarItem(produto: Produto){
+        var produtoParaAtualizar = listaProduto.find { it.id_produto == produto.id_produto }
+        val posicao = listaProduto.indexOfFirst { it.id_produto == produto.id_produto }
+
+        if (produtoParaAtualizar != null) {
+            // Realize as atualizações no produto
+            produtoParaAtualizar.valor_produto = produto.valor_produto
+            produtoParaAtualizar.qtd_produto = produto.qtd_produto
+            produtoParaAtualizar.descricao = produto.descricao
+            // Imprima a lista atualizada
+            notifyItemChanged(posicao)
+
+        } else {
+            println("Produto com ID ${produto.id_produto} não encontrado na lista.")
+        }
+    }
 
 
     inner class ProdutoViewHolder(itemBinding: ItemProdutoBinding) :
@@ -50,33 +79,31 @@ class produtoAdapter(
 
         @SuppressLint("ClickableViewAccessibility")
         fun binding(produto: Produto) {
-            val titulo = if(produto.descricao!!.isNotEmpty()){
+            val titulo = if (produto.descricao!!.isNotEmpty()) {
                 "${produto.descricao}"
-            }else{
+            } else {
                 "Produto ${listaProduto.size - adapterPosition}"
             }
 
             binding.txtProduto.text = titulo
-            binding.txtQuantidade.text = "${produto.qtd_produto} itens a R$ ${produto.valor_produto} cada"
-            binding.txtTotalItem.text = "R$ ${ String.format("%.2f", produto.qtd_produto * produto.valor_produto)}"
+            binding.txtQuantidade.text =
+                "${produto.qtd_produto} itens a R$ ${produto.valor_produto} cada"
+            binding.txtTotalItem.text =
+                "R$ ${String.format("%.2f", produto.qtd_produto * produto.valor_produto)}"
 
             binding.clProduto.setOnClickListener {
                 onClickEditar(produto)
             }
 
 
-
-
         }
-
-
 
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
         val itemProdutoBinding = ItemProdutoBinding.inflate(
-            LayoutInflater.from(parent.context),parent,false
+            LayoutInflater.from(parent.context), parent, false
         )
         return ProdutoViewHolder(itemProdutoBinding)
     }

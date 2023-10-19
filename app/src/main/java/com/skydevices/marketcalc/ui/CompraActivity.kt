@@ -13,10 +13,11 @@ import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.Utils.MaskMoney
-import com.skydevices.marketcalc.Utils.dialogs.DialogData
-import com.skydevices.marketcalc.Utils.dialogs.RoundedAlertDialog
+import com.skydevices.marketcalc.Utils.dialogUtil.DialogData
+import com.skydevices.marketcalc.Utils.dialogUtil.RoundedAlertDialog
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeActionListener
 import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
+import com.skydevices.marketcalc.adapter.compraAdapter
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.databinding.ActivityCompraBinding
 import com.skydevices.marketcalc.model.Compra
@@ -34,8 +35,6 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         return binding
     }
 
-    private lateinit var swipeCallback: SwipeActionListener
-
     private lateinit var compraPresenter: CompraPresenter
 
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -44,17 +43,15 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     private var produtoAdapter: produtoAdapter? = null
 
-    private var editMode = false
-
     private lateinit var badgeDrawable: BadgeDrawable
 
     private var idRecebido = 0
 
     lateinit var editCompra: Compra
 
-    lateinit var editProduto: Produto
-
     private var txtQntIncremento = 1
+
+    var idProduto : Int = 0
 
     override fun onInject() {
         setContentView(binding.root)
@@ -72,13 +69,14 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             val quantidade = binding.txtQnd.text.toString().toInt()
             val descricao = binding.txtDescricao.text.toString()
 
-            compraPresenter.adicionarProduto(
+            compraPresenter.processarModo(
+                idProduto,
                 idRecebido,
                 valor,
                 quantidade,
                 descricao
             )
-            binding.rvLista.scrollToPosition(0)
+
         }
 
         binding.rvLista.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -105,6 +103,16 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
         binding.fabAdicionar.setOnClickListener {
             compraPresenter.exibirDialogFinalizar(editCompra)
+        }
+
+        with(binding){
+            txtInputQtd.setEndIconOnClickListener {
+                compraPresenter.decrementCounter()
+            }
+
+            txtInputQtd.setStartIconOnClickListener {
+                compraPresenter.incrementCounter()
+            }
         }
     }
 
@@ -136,6 +144,8 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     private fun configRecycler() {
         produtoAdapter = produtoAdapter { editProduto ->
+            compraPresenter.modoEdicao(editProduto)
+            Log.i("info_teste", "editPrddsds: ${editProduto.id_produto}")
 
         }
 
@@ -156,6 +166,27 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
     override fun finalizarActivity() {
         finish()
     }
+
+    override fun modoEdicao(produto: Produto) {
+
+            idProduto = produto.id_produto
+
+        Log.i("info_teste", "idproduto: ${produto.id_produto}")
+        with(binding){
+            val valor = String.format("%.2f", produto.valor_produto)
+            val quantidade = produto.qtd_produto.toString()
+            val descricao = produto.descricao
+            val button = "atualizar"
+
+
+
+            txtValor.setText(valor)
+            txtQnd.setText(quantidade)
+            txtDescricao.setText(descricao)
+            btnSalvar.setText(button)
+        }
+    }
+
 
     override fun exibirCompra(listaCompra: MutableList<Produto>) {
 
@@ -204,16 +235,45 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         descricao: String
     ) {
 
-        compraPresenter.adicionarProduto(idRecebido, valor, quantidade, descricao)
+        compraPresenter.processarModo(-1,idRecebido, valor, quantidade, descricao)
     }
 
-    override fun atualizarProduto(produto: Produto) {
-        TODO("Not yet implemented")
+    override fun atualizarProduto(idProduto : Int) {
+        val formatador = Formatters()
+        val valor = formatador.formatarStringToDouble(binding.txtValor.text.toString())
+        val quantidade = binding.txtQnd.text.toString().toInt()
+        val descricao = binding.txtDescricao.text.toString()
+
+        compraPresenter.processarModo(
+            idProduto,
+            idRecebido,
+            valor,
+            quantidade,
+            descricao
+        )
+
     }
 
     override fun excluirProduto(position: Int) {
         compraPresenter.excluirProduto(position)
 
+    }
+
+    override fun limparCampos() {
+        compraPresenter.editMode = false
+        with(binding){
+            txtValor.setText("")
+            txtQnd.setText("1")
+            txtDescricao.setText("")
+            btnSalvar.setText("INCLUIR")
+
+        }
+        compraPresenter.count = 1
+    }
+
+    override fun updateCounter(count: Int) {
+        val counterTextView = binding.txtQnd
+        counterTextView.setText("$count")
     }
 
     override fun onSwipeLeft(position: Int) {
@@ -225,7 +285,8 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             {//onPositive
                 val idProduto = position
                 excluirProduto(idProduto)
-                binding.rvLista.adapter?.notifyItemRemoved(position)
+                produtoAdapter?.removerItem(position)
+
 
             },
             {//onNegative or Cancel
@@ -233,6 +294,10 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             }
         )
         dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
+    }
+
+    override fun scrollRecyclerViewToPosition(position: Int) {
+        binding.rvLista.scrollToPosition(position)
     }
 
 }
