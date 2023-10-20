@@ -66,7 +66,7 @@ class CompraDAO(context: Context) : ICompraDAO {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun listaHistorico(): MutableList<Compra> {
+    override fun listarCompra(): MutableList<Compra> {
         val listaHistorico = mutableListOf<Compra>()
 
         val sql =
@@ -103,5 +103,37 @@ class CompraDAO(context: Context) : ICompraDAO {
 
         return listaHistorico
 
+    }
+
+    override fun removerCompra(id: Int): Boolean {
+
+
+        val args = arrayOf(id.toString())
+
+        try {
+            escrita.delete(
+                DatabaseHelper.TABELA_PRODUTOS,
+                "${DatabaseHelper.ID_COMPRA} = ?",
+                args
+
+            )
+
+            escrita.delete(
+                DatabaseHelper.TABELA_COMPRAS,
+                "${DatabaseHelper.ID_COMPRA} = ?",
+                args
+
+            )
+
+
+            Log.i("info_db", "Sucesso ao Remover Compra ") // log do sistema
+
+
+        } catch (e: Exception) {
+            Log.i("info_db", "Falha ao Remover Compra ")
+
+            return false
+        }
+        return true
     }
 }

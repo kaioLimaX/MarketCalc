@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skydevices.marketcalc.model.Compra
+import com.skydevices.marketcalc.model.Produto
 import com.skydevices.marketcalc.model.database.compraDAO.CompraDAO
 import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.ui.CompraActivity
@@ -18,11 +19,14 @@ import java.time.LocalDate
 
     ) {
 
+    var listaCompras = mutableListOf<Compra>()
+
     val compraDAO = CompraDAO(context)
         @RequiresApi(Build.VERSION_CODES.O)
         fun recuperarCompras(){
-            val listaProdutos = compraDAO.listaHistorico()
-            principalHome.exibirCompras(listaProdutos)
+            val listaCompra = compraDAO.listarCompra()
+            principalHome.exibirCompras(listaCompra)
+            this.listaCompras = listaCompra
 
 
         }
@@ -40,5 +44,12 @@ import java.time.LocalDate
             }
 
         }
+
+    fun excluirCompra(position: Int) {
+        val produto = listaCompras.get(position)
+        compraDAO.removerCompra(produto.id_compra)
+        listaCompras.removeAt(position)
+
+    }
 
         }

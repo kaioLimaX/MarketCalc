@@ -64,6 +64,8 @@ class CompraPresenter(
         quantidade: Int,
         descricao: String
     ) {
+        compraHome.showErrorField(null)
+
 
         if(validarCampos(valor)){
             val produto = if (idProduto != -1) {
@@ -174,7 +176,7 @@ class CompraPresenter(
 
     fun validarCampos(campo: Double): Boolean {
         if (campo <= 0.00) {
-            compraHome.exibirToast("insira um valor valido vazio")
+            compraHome.showErrorField("insira um valor valido")
             return false
         }  else {
             return true

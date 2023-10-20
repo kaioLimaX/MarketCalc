@@ -90,7 +90,7 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
     }
 
     override fun excluirCompra(position: Int) {
-        //empty
+        principalPresenter.excluirCompra(position)
     }
 
 

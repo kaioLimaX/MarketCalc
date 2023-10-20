@@ -11,7 +11,13 @@ class Formatters {
     }
 
     fun formatarStringToDouble(texto : String) : Double{
-        val texto = texto.replace("[^\\d,]".toRegex(), "").replace(".", "").replace(",", ".")
-        return texto.toDouble()
+        if (!texto.isEmpty()){
+            val texto = texto.replace("[^\\d,]".toRegex(), "").replace(".", "").replace(",", ".")
+
+            return texto.toDouble()
+        }
+
+        return 0.00
+
     }
 }

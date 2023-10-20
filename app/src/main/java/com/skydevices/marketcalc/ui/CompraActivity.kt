@@ -280,28 +280,31 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         counterTextView.setText("$count")
     }
 
-    override fun onSwipeLeft(position: Int) {
+    override fun onSwipeLeft(pos: Int) {
         val dialogFragment = RoundedAlertDialog(
             DialogData.dialogExcluir.title,
             DialogData.dialogExcluir.message,
             DialogData.dialogExcluir.buttonText,
             DialogData.dialogExcluir.iconResId,
             {//onPositive
-                val idProduto = position
+                val idProduto = pos
                 excluirProduto(idProduto)
-                produtoAdapter?.removerItem(position)
-
+                produtoAdapter?.removerItem(pos)
 
             },
             {//onNegative or Cancel
-                binding.rvLista.adapter?.notifyItemChanged(position)
+                binding.rvLista.adapter?.notifyItemChanged(pos)
             }
         )
-        dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
+        dialogFragment.show(supportFragmentManager, "ExibirExcluirDialog")
     }
 
     override fun scrollRecyclerViewToPosition(position: Int) {
         binding.rvLista.scrollToPosition(position)
+    }
+
+    override fun showErrorField(mensagem: String?) {
+        binding.txtInputValor.error = mensagem
     }
 
 }
