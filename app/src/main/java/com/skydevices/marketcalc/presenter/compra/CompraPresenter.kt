@@ -22,7 +22,7 @@ class CompraPresenter(
 
     var editMode = false
 
-    var count = 0
+    var count = 1
 
     var listaProdutos = mutableListOf<Produto>()
 

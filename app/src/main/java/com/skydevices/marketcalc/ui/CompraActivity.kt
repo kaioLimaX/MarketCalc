@@ -2,6 +2,7 @@ package com.skydevices.marketcalc.ui
 
 import android.os.Build
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.doOnPreDraw
@@ -12,6 +13,7 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.google.android.material.textfield.TextInputLayout
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.Utils.MaskMoney
 import com.skydevices.marketcalc.Utils.dialogUtil.DialogData
@@ -304,7 +306,19 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
     }
 
     override fun showErrorField(mensagem: String?) {
-        binding.txtInputValor.error = mensagem
+        with(binding){
+            val inputValor = txtInputValor
+
+            if(mensagem == null){
+                binding.txtInputValor.error = mensagem
+                binding.txtInputValor.isErrorEnabled = false
+
+
+
+            }else{
+                binding.txtInputValor.error = mensagem
+            }
+        }
     }
 
 }

@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Toolbar Title"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
 </androidx.appcompat.widget.Toolbar>
