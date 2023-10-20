@@ -1,5 +1,6 @@
 package com.skydevices.marketcalc.ui
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,12 +37,21 @@ class ResumoActivity : AbstractActivity() , ResumoHome {
     }
 
     override fun onInject() {
+        iniciarView()
         recuperarDadosActivity()
         configRecycler()
 
         resumoPresenter = ResumoPresenter(this, applicationContext, produtoAdapter!!)
         resumoPresenter.exibirCompra(idRecebido)
 
+    }
+
+    private fun iniciarView() {
+        setSupportActionBar(binding.includeToolbar.toolbar)
+
+        binding.includeToolbar.toolbarTitle.text = "Resumo da Compra"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onStartActivity() {
@@ -73,11 +83,12 @@ class ResumoActivity : AbstractActivity() , ResumoHome {
     }
 
     override fun exibirCompra(compra: MutableList<Produto>) {
-
         produtoAdapter?.adicionarLista(compra)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun exibirTotal(valorTotal: Double) {
-        binding.textView4.text = Double.toString()
+        Log.i("TAG", "exibirTotal: $valorTotal")
+        binding.textView4.text = "R$ ${String.format("%.2f", valorTotal)}"
     }
 }
