@@ -1,100 +1,83 @@
 package com.skydevices.marketcalc.ui
 
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
+import com.skydevices.marketcalc.adapter.compraAdapter
 import com.skydevices.marketcalc.adapter.produtoAdapter
-import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
 import com.skydevices.marketcalc.databinding.ActivityResumoBinding
 import com.skydevices.marketcalc.model.Compra
+import com.skydevices.marketcalc.model.Produto
+import com.skydevices.marketcalc.presenter.compra.CompraPresenter
+import com.skydevices.marketcalc.presenter.principal.PrincipalPresenter
+import com.skydevices.marketcalc.presenter.resumo.ResumoHome
+import com.skydevices.marketcalc.presenter.resumo.ResumoPresenter
 
-@ExperimentalBadgeUtils class ResumoActivity : AppCompatActivity() {
+@ExperimentalBadgeUtils
+class ResumoActivity : AbstractActivity() , ResumoHome {
 
-    val binding by lazy {
-        ActivityResumoBinding.inflate(layoutInflater)
-    }
-    private var itemAdapter: produtoAdapter? = null
+    private lateinit var binding: ActivityResumoBinding
+
+    private lateinit var resumoPresenter: ResumoPresenter
+
+    private var produtoAdapter: produtoAdapter? = null
+
+    private var linearLayoutManager: LinearLayoutManager? = null
 
     private var idRecebido = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        inicializarToolbar()
+    override fun getLayout(): ViewBinding {
+        binding = ActivityResumoBinding.inflate(layoutInflater)
+
+        return binding
+    }
+
+    override fun onInject() {
+        recuperarDadosActivity()
+        configRecycler()
+
+        resumoPresenter = ResumoPresenter(this, applicationContext, produtoAdapter!!)
+        resumoPresenter.exibirCompra(idRecebido)
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onStart() {
-        super.onStart()
+    override fun onStartActivity() {
+
+    }
+
+    private fun recuperarDadosActivity() {
         val extrasId = intent?.extras
         if (extrasId != null) {
             val compra: Compra? = intent.getParcelableExtra("compra")
-
             idRecebido = compra!!.id_compra
-            listar(idRecebido)
-
-
-
         } else {
             Log.i("info_teste", "onStart: $idRecebido")
         }
-
     }
 
-    private fun inicializarToolbar() {
-        binding.includeToolbar.toolbarTitle.text = "Resumo da compra"
-        setSupportActionBar(binding.includeToolbar.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        //listarCompras()
-    }
-
-
-    fun listar(id: Int) {
-        /*var resultado = 0.00
-        val produtoDAO = ProdutoDAO(this)
-        val listaProdutos = produtoDAO.listar(id)
-        itemAdapter = produtoAdapter(
-            onClickExcluir = { produto ->
-
-            }
-        ) { produto ->
+    private fun configRecycler() {
+        produtoAdapter = produtoAdapter { editProduto ->
 
         }
-        itemAdapter?.adicionarLista(listaProdutos)
-        binding.rvResumo.adapter = itemAdapter
-        binding.rvResumo.layoutManager = LinearLayoutManager(this)
 
-        *//*binding.rvLista.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                RecyclerView.VERTICAL
-            )
-        )*//*
+        linearLayoutManager = LinearLayoutManager(this@ResumoActivity)
 
+        with(binding.rvResumo) {
+            adapter = produtoAdapter
+            layoutManager = linearLayoutManager
+        }
 
-        if (listaProdutos.isNotEmpty()) {
-            listaProdutos.forEach { produto ->
-                Log.i("info_db", "${produto.valor_produto} + ${produto.qtd_produto} ")
+    }
 
-                val resultadoItem = produto.valor_produto * produto.qtd_produto
-                resultado += resultadoItem
-                Log.i("info_db", "$resultado ")
-                binding.textView4.text = " R$ ${String.format("%.2f", resultado)}"
+    override fun exibirCompra(compra: MutableList<Produto>) {
 
-            }
-        }else{
-            binding.textView4.text = " R$ 00.00"
-        }*/
+        produtoAdapter?.adicionarLista(compra)
+    }
 
-
-
-
+    override fun exibirTotal(valorTotal: Double) {
+        binding.textView4.text = Double.toString()
     }
 }
