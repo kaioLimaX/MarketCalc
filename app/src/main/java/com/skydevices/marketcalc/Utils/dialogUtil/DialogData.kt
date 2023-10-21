@@ -24,7 +24,7 @@ class DialogData {
             title = "Termos de uso",
             message = Contants.mensagemTermos,
             buttonText = "aceitar",
-            iconResId = R.drawable.shopping_cart_check_24
+            iconResId = R.drawable.exclamation_24
         )
     }
 }

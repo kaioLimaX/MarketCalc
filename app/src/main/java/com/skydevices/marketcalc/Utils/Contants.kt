@@ -12,9 +12,8 @@ object Contants {
     const val maxValue = 99
 
     const val mensagemTermos = """
-    Bem-vindo ao nosso aplicativo de lista de mercado. 
-    
-    Ao usar o aplicativo, você concorda com os seguintes termos de uso:
+Bem-vindo ao nosso aplicativo de lista de mercado.
+Ao usar o aplicativo, você concorda com os seguintes termos de uso:
 
     1. O aplicativo é destinado para organização de listas de compras e cálculo do preço total.
 
@@ -26,7 +25,7 @@ object Contants {
 
     5. Não somos responsáveis por disputas ou perdas financeiras.
     
-    Ao clicar em "Aceitar", você concorda com esses termos de uso.
+Ao clicar em "Aceitar", você concorda com esses termos de uso.
     """
 
 
