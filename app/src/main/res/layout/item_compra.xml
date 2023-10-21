@@ -56,7 +56,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/txtStatus"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txtIdCompra"
-            app:srcCompat="@drawable/exclamation_24" />
+            app:srcCompat="@drawable/ic_exclamation_24" />
 
         <TextView
             android:id="@+id/txtData"

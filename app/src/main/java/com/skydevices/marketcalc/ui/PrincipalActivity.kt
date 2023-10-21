@@ -106,7 +106,7 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
 
     }
 
-    override fun iniciarIntent(compra: Compra, activity: Class<*>) {
+    override fun iniciarIntent(compra: Compra?, activity: Class<*>) {
         val intent = Intent(this, activity)
         intent.putExtra("compra", compra)
         startActivity(intent)

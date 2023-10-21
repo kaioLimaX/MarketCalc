@@ -1,20 +1,16 @@
 package com.skydevices.marketcalc.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.skydevices.marketcalc.R
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.databinding.ItemCompraBinding
 import com.skydevices.marketcalc.model.Compra
-import com.skydevices.marketcalc.model.Produto
 
 class compraAdapter(
 
@@ -95,12 +91,12 @@ class compraAdapter(
             if(compra.status_compra == 0){
                // binding.txtStatus.text = "Status: "
                // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
-                binding.imgStatus.setImageResource(R.drawable.exclamation_24)
+                binding.imgStatus.setImageResource(R.drawable.ic_exclamation_24)
                 binding.txtStatus.text = "em andamento"
             }else{
                // binding.txtStatus.text = "Status: "
                // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
-                binding.imgStatus.setImageResource(R.drawable.check_circle_24)
+                binding.imgStatus.setImageResource(R.drawable.ic_check_circle_24)
                 binding.txtStatus.text = "concluida"
             }
             binding.ClItemCompra.setOnClickListener {

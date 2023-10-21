@@ -10,12 +10,10 @@ interface CompraHome {
     fun exibirTotal(valorTotal: Double)
     fun atualizarBadge(numeroItens: Int)
     fun exibirFinalizarCompra(compra: Compra)
-
-    //finalizar Activity
     fun finalizarActivity()
-
-    //controle Modo Edição
     fun modoEdicao(produto: Produto)
+
+
     fun adicionarProduto(idRecebido: Int, valor: Double, quantidade: Int, descricao: String)
     fun atualizarProduto(idProduto: Int)
     fun excluirProduto(position: Int)

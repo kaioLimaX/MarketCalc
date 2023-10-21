@@ -38,7 +38,8 @@ class PrincipalPresenter(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun novaCompra() {
-        val retornoDao = compraDAO.iniciarCompra()
+        principalHome.iniciarIntent(null, CompraActivity::class.java)
+        /*val retornoDao = compraDAO.iniciarCompra()
 
         if (retornoDao != 0) {
             val compra = Compra(-1, 0, LocalDate.now(), 0.0)
@@ -46,7 +47,7 @@ class PrincipalPresenter(
             principalHome.iniciarIntent(compra, CompraActivity::class.java)
         } else {
             Toast.makeText(context, "erro ao iniciar compra", Toast.LENGTH_SHORT).show()
-        }
+        }*/
 
     }
 

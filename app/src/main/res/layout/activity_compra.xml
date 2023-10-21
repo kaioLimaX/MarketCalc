@@ -29,16 +29,17 @@
         android:id="@+id/cLlistaVazia"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/include"
-        tools:layout_editor_absoluteX="8dp">
+        tools:layout_editor_absoluteX="8dp"
+        tools:visibility="invisible">
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@drawable/baseline_format_list_bulleted_24"
+            android:src="@drawable/ic_list_bulleted_24"
             app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -175,7 +176,7 @@
         app:backgroundTint="@color/secundaria_variacao"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/shopping_cart_check_24"
+        app:srcCompat="@drawable/ic_shopping_cart_check_24"
         app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

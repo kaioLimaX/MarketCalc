@@ -45,7 +45,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     private lateinit var badgeDrawable: BadgeDrawable
 
-    private var idRecebido = 0
+    private var idRecebido: Int? = null
 
     lateinit var editCompra: Compra
 
@@ -61,7 +61,9 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
         badgeDrawable = BadgeDrawable.create(this)
         compraPresenter = CompraPresenter(this, applicationContext, produtoAdapter!!)
-        compraPresenter.exibirCompra(idRecebido)
+        if(idRecebido != null){
+            compraPresenter.exibirCompra(idRecebido!!)
+        }
 
         binding.btnSalvar.setOnClickListener {
             val formatador = Formatters()
@@ -135,8 +137,13 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         val extrasId = intent?.extras
         if (extrasId != null) {
             val compra: Compra? = intent.getParcelableExtra("compra")
-            editCompra = compra!!
-            idRecebido = compra!!.id_compra
+            if(compra != null ){
+                editCompra = compra!!
+              idRecebido = compra!!.id_compra
+            }else{
+                //empty
+            }
+
         } else {
             Log.i("info_teste", "onStart: $idRecebido")
         }

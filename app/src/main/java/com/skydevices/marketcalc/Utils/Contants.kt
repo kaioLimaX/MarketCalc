@@ -12,7 +12,7 @@ object Contants {
     const val maxValue = 99
 
     const val mensagemTermos = """
-Bem-vindo ao nosso aplicativo de lista de mercado.
+Bem-vindo ao nosso aplicativo de soma de mercado.
 Ao usar o aplicativo, você concorda com os seguintes termos de uso:
 
     1. O aplicativo é destinado para organização de listas de compras e cálculo do preço total.

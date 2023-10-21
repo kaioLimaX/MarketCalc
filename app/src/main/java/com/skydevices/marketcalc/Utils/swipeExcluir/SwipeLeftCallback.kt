@@ -1,6 +1,5 @@
 package com.skydevices.marketcalc.Utils.swipeExcluir
 
-import android.content.Context
 import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -42,7 +41,7 @@ class SwipeCallback(
             actionState,
             isCurrentlyActive
         )
-            .addSwipeLeftActionIcon(R.drawable.trash_24)
+            .addSwipeLeftActionIcon(R.drawable.ic_trash_24)
             .addSwipeLeftLabel("Excluir")
             .create()
             .decorate()

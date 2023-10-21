@@ -11,6 +11,8 @@ import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
 import com.skydevices.marketcalc.model.database.produtoDAO.ProdutoDAO
+import com.skydevices.marketcalc.ui.CompraActivity
+import java.time.LocalDate
 
 @ExperimentalBadgeUtils
 class CompraPresenter(
@@ -58,30 +60,67 @@ class CompraPresenter(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun processarModo(
         idProduto: Int,
-        idCompra: Int,
+        idCompra: Int?,
         valor: Double,
         quantidade: Int,
         descricao: String
     ) {
         compraHome.showErrorField(null)
 
+        var produto: Produto? = null
 
-        if(validarCampos(valor)){
-            val produto = Produto(
-                if (idProduto != -1) idProduto else -1,
-                idCompra,
-                descricao,
-                valor,
-                quantidade
-            )
+        if(idCompra != null){
+            if(validarCampos(valor)){
+                produto = Produto(
+                    if (idProduto != -1) idProduto else -1,
+                    idCompra,
+                    descricao,
+                    valor,
+                    quantidade
+                )
 
-            if (editMode) {
-                atualizarProduto(produto)
-            } else {
-                adicionarProduto(produto)
+                if (editMode) {
+                    atualizarProduto(produto)
+                } else {
+                    adicionarProduto(produto)
+                }
             }
+
+        }else{
+            val retornoDao = produtoDAO.iniciarCompra()
+
+            if (retornoDao != 0) {
+                produto = Produto(
+                    if (idProduto != -1) idProduto else -1,
+                    retornoDao,
+                    descricao,
+                    valor,
+                    quantidade
+                )
+                if(produto != null){
+                    adicionarProduto(produto)
+                }
+            }
+        }
+
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun novaCompra() {
+
+        val retornoDao = produtoDAO.iniciarCompra()
+
+        if (retornoDao != 0) {
+            val compra = Compra(-1, 0, LocalDate.now(), 0.0)
+            compra.id_compra = retornoDao
+
+        } else {
+            Toast.makeText(context, "erro ao iniciar compra", Toast.LENGTH_SHORT).show()
         }
 
     }
