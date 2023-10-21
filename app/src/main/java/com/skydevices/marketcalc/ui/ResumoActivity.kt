@@ -2,18 +2,13 @@ package com.skydevices.marketcalc.ui
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.ExperimentalBadgeUtils
-import com.skydevices.marketcalc.Utils.swipeExcluir.SwipeCallback
-import com.skydevices.marketcalc.adapter.compraAdapter
 import com.skydevices.marketcalc.adapter.produtoAdapter
 import com.skydevices.marketcalc.databinding.ActivityResumoBinding
 import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
-import com.skydevices.marketcalc.presenter.compra.CompraPresenter
-import com.skydevices.marketcalc.presenter.principal.PrincipalPresenter
 import com.skydevices.marketcalc.presenter.resumo.ResumoHome
 import com.skydevices.marketcalc.presenter.resumo.ResumoPresenter
 
@@ -69,7 +64,9 @@ class ResumoActivity : AbstractActivity() , ResumoHome {
     }
 
     private fun configRecycler() {
-        produtoAdapter = produtoAdapter { editProduto ->
+        val recycler = binding.rvResumo
+        val constraintLayout = null
+        produtoAdapter = produtoAdapter(recycler,constraintLayout) { editProduto ->
 
         }
 

@@ -42,6 +42,7 @@ class CompraPresenter(
 
         compraHome.atualizarBadge(listaProdutos.size)
         compraHome.exibirTotal(total)
+        compraHome.limparCampos()
 
     }
 
@@ -68,23 +69,13 @@ class CompraPresenter(
 
 
         if(validarCampos(valor)){
-            val produto = if (idProduto != -1) {
-                Produto(
-                    idProduto,
-                    idCompra,
-                    descricao,
-                    valor,
-                    quantidade
-                )
-            } else {
-                Produto(
-                    -1,
-                    idCompra,
-                    descricao,
-                    valor,
-                    quantidade
-                )
-            }
+            val produto = Produto(
+                if (idProduto != -1) idProduto else -1,
+                idCompra,
+                descricao,
+                valor,
+                quantidade
+            )
 
             if (editMode) {
                 atualizarProduto(produto)

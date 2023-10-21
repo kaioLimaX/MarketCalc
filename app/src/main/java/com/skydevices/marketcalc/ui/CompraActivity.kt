@@ -2,7 +2,6 @@ package com.skydevices.marketcalc.ui
 
 import android.os.Build
 import android.util.Log
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.doOnPreDraw
@@ -13,7 +12,6 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
-import com.google.android.material.textfield.TextInputLayout
 import com.skydevices.marketcalc.Utils.Formatters
 import com.skydevices.marketcalc.Utils.MaskMoney
 import com.skydevices.marketcalc.Utils.dialogUtil.DialogData
@@ -91,7 +89,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
                 // Verifique se a lista é grande o suficiente para permitir rolagem
                 if (totalItens > linearLayoutManager!!.childCount) {
-                    if (totalItens - 1 == ultimoItemVisivel) {
+                    if (totalItens - 2 == ultimoItemVisivel || totalItens - 1 == ultimoItemVisivel) {
                         binding.fabAdicionar.hide()
                     } else {
                         binding.fabAdicionar.show()
@@ -145,7 +143,9 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
     }
 
     private fun configRecycler() {
-        produtoAdapter = produtoAdapter { editProduto ->
+        val recycler = binding.rvLista
+        val constraintLayout = binding.cLlistaVazia
+        produtoAdapter = produtoAdapter(recycler,constraintLayout) { editProduto ->
             compraPresenter.modoEdicao(editProduto)
             Log.i("info_teste", "editPrddsds: ${editProduto.id_produto}")
 
@@ -303,17 +303,15 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     override fun scrollRecyclerViewToPosition(position: Int) {
         binding.rvLista.scrollToPosition(position)
+        binding.fabAdicionar.show()
     }
 
     override fun showErrorField(mensagem: String?) {
         with(binding){
-            val inputValor = txtInputValor
 
             if(mensagem == null){
                 binding.txtInputValor.error = mensagem
                 binding.txtInputValor.isErrorEnabled = false
-
-
 
             }else{
                 binding.txtInputValor.error = mensagem

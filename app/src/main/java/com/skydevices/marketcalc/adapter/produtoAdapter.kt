@@ -3,7 +3,9 @@ package com.skydevices.marketcalc.adapter
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.skydevices.marketcalc.databinding.ItemProdutoBinding
@@ -12,6 +14,8 @@ import com.skydevices.marketcalc.model.Produto
 
 class produtoAdapter(
 
+    private val recyclerView: RecyclerView,
+    private val ContrainLayout: ConstraintLayout?,
     val onClickEditar: (Produto) -> Unit
 
 ) : Adapter<produtoAdapter.ProdutoViewHolder>() {
@@ -22,6 +26,7 @@ class produtoAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun adicionarLista(lista: MutableList<Produto>) {
         this.listaProduto = lista
+        verificarLista()
         notifyDataSetChanged()
     }
 
@@ -37,11 +42,24 @@ class produtoAdapter(
 
     fun adicionarItem(produto: Produto) {
         listaProduto.add(0, produto)
+        verificarLista()
         notifyItemInserted(0)
     }
 
     fun removerItem(position: Int) {
+        verificarLista()
         notifyItemRemoved(position)
+    }
+
+    fun verificarLista(){
+        if (listaProduto.isEmpty()) {
+            // Lista está vazia, atualize a visibilidade do RecyclerView e do layout alternativo
+            recyclerView.visibility = View.GONE
+            ContrainLayout?.visibility = View.VISIBLE
+        }else{
+            recyclerView.visibility = View.VISIBLE
+            ContrainLayout?.visibility = View.INVISIBLE
+        }
     }
 
 

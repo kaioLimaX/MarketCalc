@@ -16,33 +16,57 @@
         android:id="@+id/rvLista"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include"
         tools:itemCount="13"
-        tools:listitem="@layout/item_produto" />
+        tools:listitem="@layout/item_produto"
+        tools:visibility="visible" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdicionar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:contentDescription="@string/adicionar_tarefa"
-        android:focusable="true"
-        app:backgroundTint="@color/secundaria_variacao"
-        app:layout_constraintBottom_toBottomOf="@+id/rvLista"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/shopping_cart_check_24"
-        app:tint="@color/white" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cLlistaVazia"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        tools:layout_editor_absoluteX="8dp">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/baseline_format_list_bulleted_24"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seu carrinho parece estar vazio\npreencha os campos abaixo\npara iniciar"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,7 +92,7 @@
                     android:id="@+id/txtValor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Valor Unitario"
+                    android:hint="Valor Unitario R$"
                     android:inputType="number|numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -138,5 +162,20 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdicionar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/adicionar_tarefa"
+        android:focusable="true"
+        app:backgroundTint="@color/secundaria_variacao"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/shopping_cart_check_24"
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

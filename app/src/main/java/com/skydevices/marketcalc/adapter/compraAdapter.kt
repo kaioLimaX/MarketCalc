@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -15,29 +17,45 @@ import com.skydevices.marketcalc.model.Compra
 import com.skydevices.marketcalc.model.Produto
 
 class compraAdapter(
-    private val context: Context,
-    private var listaProduto: MutableList<Compra> = mutableListOf(),
+
+    private val recyclerView: RecyclerView,
+    private val ContrainLayout : ConstraintLayout,
+    private var listaCompra: MutableList<Compra> = mutableListOf(),
     private val clique: (Compra) -> Unit,
 
 
     ) : Adapter<compraAdapter.ProdutoViewHolder>() {
 
     fun getItem(position: Int): Compra {
-        return this.listaProduto[position]
+        return this.listaCompra[position]
     }
 
     fun adicionarLista(lista: MutableList<Compra>) {
-        this.listaProduto = lista
+        this.listaCompra = lista
+        verificarLista()
         notifyDataSetChanged()
     }
 
     fun removerItem(position: Int) {
+    verificarLista()
         notifyItemRemoved(position)
+
+    }
+
+    fun verificarLista(){
+        if (listaCompra.isEmpty()) {
+            // Lista está vazia, atualize a visibilidade do RecyclerView e do layout alternativo
+            recyclerView.visibility = View.GONE
+            ContrainLayout.visibility = View.VISIBLE
+        }else{
+            recyclerView.visibility = View.VISIBLE
+            ContrainLayout.visibility = View.INVISIBLE
+        }
     }
 
     fun atualizarItem(compra: Compra){
-        var produtoParaAtualizar = listaProduto.find { it.id_compra == compra.id_compra }
-        val posicao = listaProduto.indexOfFirst { it.id_compra == compra.id_compra }
+        var produtoParaAtualizar = listaCompra.find { it.id_compra == compra.id_compra }
+        val posicao = listaCompra.indexOfFirst { it.id_compra == compra.id_compra }
 
         if (produtoParaAtualizar != null) {
             // Realize as atualizações no produto
@@ -102,11 +120,11 @@ class compraAdapter(
     }
 
     override fun getItemCount(): Int {
-        return listaProduto.size
+        return listaCompra.size
     }
 
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
-        val produto = listaProduto[position]
+        val produto = listaCompra[position]
         holder.binding(produto)
     }
 }

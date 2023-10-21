@@ -2,6 +2,7 @@ package com.skydevices.marketcalc.ui
 
 import android.content.Intent
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,9 +41,13 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
 
 
         with(binding) {
-            floatingActionButton.setOnClickListener {
+            fabNovaCompra.setOnClickListener {
                 iniciarCompra()
             }
+            btnIniciarCompra.setOnClickListener {
+                iniciarCompra()
+            }
+
         }
 
 
@@ -55,7 +60,9 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
     }
 
     private fun configRecycler() {
-        compraAdapter = compraAdapter(this) { compra ->
+        val recycler = binding.rvCompras
+        val constraintLayout = binding.cLemptyList
+        compraAdapter = compraAdapter(recycler,constraintLayout) { compra ->
             if (compra.status_compra == 1) {
                 iniciarIntent(compra, ResumoActivity::class.java)
             } else {
@@ -77,9 +84,7 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun exibirCompras(compra: MutableList<Compra>) {
-
         compraAdapter?.adicionarLista(compra)
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -96,8 +101,7 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
 
     override fun inicializarView() {
         setContentView(binding.root)
-
-        binding.includeToolbar.toolbarTitle.text = "Soma Mercado"
+        binding.includeToolbar.toolbarTitle.text = "Soma do Mercado"
 
 
     }
@@ -106,6 +110,25 @@ class PrincipalActivity : AbstractActivity(), PrincipalHome, SwipeActionListener
         val intent = Intent(this, activity)
         intent.putExtra("compra", compra)
         startActivity(intent)
+    }
+
+    override fun verificarTermosdeUso() {
+        if (!principalPresenter.verificarAceitacaoTermosDeUso()){
+            val dialogFragment = RoundedAlertDialog(
+                DialogData.dialogTermos.title,
+                DialogData.dialogTermos.message,
+                DialogData.dialogTermos.buttonText,
+                DialogData.dialogTermos.iconResId,
+                {//onPositive
+                principalPresenter.salvarAceitacaoTermosDeUso()
+
+                },
+                {//onNegative or Cancel
+                   finish()
+                }
+            )
+            dialogFragment.show(supportFragmentManager, "ExibirTermosDialog")
+        }
     }
 
     override fun onSwipeLeft(pos: Int) {

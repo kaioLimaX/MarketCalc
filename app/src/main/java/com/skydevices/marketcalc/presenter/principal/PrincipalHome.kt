@@ -8,4 +8,5 @@ interface PrincipalHome {
     fun excluirCompra(position: Int)
     fun inicializarView()
     fun iniciarIntent(compra: Compra, activity: Class<*>)
+    fun verificarTermosdeUso()
 }

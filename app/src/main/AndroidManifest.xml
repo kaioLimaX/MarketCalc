@@ -13,14 +13,12 @@
         android:theme="@style/Theme.MarketCalc"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.ResumoActivity"
             android:exported="false"
             android:parentActivityName=".ui.PrincipalActivity" />
         <activity
             android:name=".ui.CompraActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false"
             android:parentActivityName=".ui.PrincipalActivity" />
         <activity
