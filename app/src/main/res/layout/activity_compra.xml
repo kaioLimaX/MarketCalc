@@ -10,7 +10,10 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/toolbar_compra" />
+        layout="@layout/toolbar_compra"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLista"
@@ -33,7 +36,7 @@
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/include"
         tools:layout_editor_absoluteX="8dp"
-        tools:visibility="invisible">
+        tools:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView3"

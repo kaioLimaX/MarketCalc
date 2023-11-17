@@ -15,7 +15,7 @@ import com.skydevices.marketcalc.model.Compra
 class compraAdapter(
 
     private val recyclerView: RecyclerView,
-    private val ContrainLayout : ConstraintLayout,
+    private val ContrainLayout: ConstraintLayout,
     private var listaCompra: MutableList<Compra> = mutableListOf(),
     private val clique: (Compra) -> Unit,
 
@@ -33,23 +33,23 @@ class compraAdapter(
     }
 
     fun removerItem(position: Int) {
-    verificarLista()
+        verificarLista()
         notifyItemRemoved(position)
 
     }
 
-    fun verificarLista(){
+    fun verificarLista() {
         if (listaCompra.isEmpty()) {
             // Lista está vazia, atualize a visibilidade do RecyclerView e do layout alternativo
             recyclerView.visibility = View.GONE
             ContrainLayout.visibility = View.VISIBLE
-        }else{
+        } else {
             recyclerView.visibility = View.VISIBLE
             ContrainLayout.visibility = View.INVISIBLE
         }
     }
 
-    fun atualizarItem(compra: Compra){
+    fun atualizarItem(compra: Compra) {
         var produtoParaAtualizar = listaCompra.find { it.id_compra == compra.id_compra }
         val posicao = listaCompra.indexOfFirst { it.id_compra == compra.id_compra }
 
@@ -65,8 +65,6 @@ class compraAdapter(
             println("Produto com ID ${compra.id_compra} não encontrado na lista.")
         }
     }
-
-
 
 
     inner class ProdutoViewHolder(itemBinding: ItemCompraBinding) :
@@ -88,14 +86,14 @@ class compraAdapter(
             binding.txtData.text = "${dataFormatada}"
 
 
-            if(compra.status_compra == 0){
-               // binding.txtStatus.text = "Status: "
-               // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
+            if (compra.status_compra == 0) {
+                // binding.txtStatus.text = "Status: "
+                // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableAlert, null)
                 binding.imgStatus.setImageResource(R.drawable.ic_exclamation_24)
                 binding.txtStatus.text = "em andamento"
-            }else{
-               // binding.txtStatus.text = "Status: "
-               // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
+            } else {
+                // binding.txtStatus.text = "Status: "
+                // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
                 binding.imgStatus.setImageResource(R.drawable.ic_check_circle_24)
                 binding.txtStatus.text = "concluida"
             }

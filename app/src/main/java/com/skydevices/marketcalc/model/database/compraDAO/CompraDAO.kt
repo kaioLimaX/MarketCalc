@@ -15,55 +15,8 @@ class CompraDAO(context: Context) : ICompraDAO {
 
     private val escrita = DatabaseHelper(context).writableDatabase
     private val leitura = DatabaseHelper(context).readableDatabase
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun iniciarCompra() : Int{
-        val dataAtual = LocalDate.now()
-
-        val compra = Compra(
-            -1,
-            0,
-            dataAtual,
-            0.0
-        )
 
 
-        val valores = ContentValues()
-        valores.put(DatabaseHelper.STATUS_COMPRA, compra.status_compra)
-        valores.put(DatabaseHelper.DATA_COMPRA, compra.data_compra.toString())
-        valores.put(DatabaseHelper.VALOR_TOTAL,0.0)
-
-        var novoID: Long = -1
-
-
-        try {
-
-            //escrita.execSQL(sql)//whitableDatabase é utilizado para comandos de INSERT,UPDATE,DELETE
-            val result = escrita.insert(
-                DatabaseHelper.TABELA_COMPRAS,
-                null,
-                valores
-            )
-
-            if (result != -1L) {
-                novoID = result
-            }
-
-            Log.i("info_db", "Sucesso ao Iniciar Nova Compra, ID gerado: $novoID")
-
-            /* escrita.delete(DatabaseHelper.TABELA_PRODUTOS, null, null)
-             listar()*/
-
-
-
-
-        } catch (e: Exception) {
-            Log.i("info_db", "Falha  ao Iniciar Nova Compra ")
-
-            return 0
-        }
-        return novoID.toInt()
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun listarCompra(): MutableList<Compra> {

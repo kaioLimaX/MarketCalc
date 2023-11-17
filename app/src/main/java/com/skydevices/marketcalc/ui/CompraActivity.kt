@@ -47,12 +47,13 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
 
     private var idRecebido: Int? = null
 
-    lateinit var editCompra: Compra
+    private var editCompra: Compra? = null
 
     private var txtQntIncremento = 1
 
     var idProduto: Int = 0
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onInject() {
         setContentView(binding.root)
         inicializarView()
@@ -104,8 +105,13 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         })
 
         binding.fabAdicionar.setOnClickListener {
-            compraPresenter.exibirDialogFinalizar(editCompra)
+            if(editCompra != null){
+                compraPresenter.exibirDialogFinalizar(editCompra!!)
+            }else{
+                exibirToast("seu carrinho esta vazio")
+            }
         }
+
 
         with(binding) {
             txtInputQtd.setEndIconOnClickListener {
@@ -143,7 +149,6 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
             }else{
                 //empty
             }
-
         } else {
             Log.i("info_teste", "onStart: $idRecebido")
         }
@@ -237,6 +242,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         dialogFragment.show(supportFragmentManager, "ExibirFinalizarDialog")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun adicionarProduto(
         idRecebido: Int,
         valor: Double,
@@ -247,6 +253,7 @@ class CompraActivity : AbstractActivity(), CompraHome, SwipeActionListener {
         compraPresenter.processarModo(-1, idRecebido, valor, quantidade, descricao)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun atualizarProduto(idProduto: Int) {
         val formatador = Formatters()
         val valor = formatador.formatarStringToDouble(binding.txtValor.text.toString())

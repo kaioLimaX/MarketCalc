@@ -72,8 +72,8 @@ class CompraPresenter(
 
         var produto: Produto? = null
 
-        if(idCompra != null){
-            if(validarCampos(valor)){
+        if (idCompra != null) {
+            if (validarCampos(valor)) {
                 produto = Produto(
                     if (idProduto != -1) idProduto else -1,
                     idCompra,
@@ -89,23 +89,22 @@ class CompraPresenter(
                 }
             }
 
-        }else{
+        } else {
             val retornoDao = produtoDAO.iniciarCompra()
 
-            if (retornoDao != 0) {
-                produto = Produto(
-                    if (idProduto != -1) idProduto else -1,
-                    retornoDao,
-                    descricao,
-                    valor,
-                    quantidade
-                )
-                if(produto != null){
+            if(validarCampos(valor)){
+                if (retornoDao != 0) {
+                    produto = Produto(
+                        if (idProduto != -1) idProduto else -1,
+                        retornoDao,
+                        descricao,
+                        valor,
+                        quantidade
+                    )
                     adicionarProduto(produto)
                 }
             }
         }
-
 
 
     }
@@ -194,8 +193,6 @@ class CompraPresenter(
             } else {
                 Toast.makeText(context, "Falha ao Concluir compra", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(context, "o carrinho esta vazio", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -208,7 +205,7 @@ class CompraPresenter(
         if (campo <= 0.00) {
             compraHome.showErrorField("insira um valor valido")
             return false
-        }  else {
+        } else {
             return true
         }
     }

@@ -1,6 +1,8 @@
 package com.skydevices.marketcalc.Utils.swipeExcluir
 
 import android.graphics.Canvas
+import android.graphics.Color
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.skydevices.marketcalc.R
@@ -32,6 +34,8 @@ class SwipeCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
+
+
         RecyclerViewSwipeDecorator.Builder(
             c,
             recyclerView,
@@ -43,6 +47,9 @@ class SwipeCallback(
         )
             .addSwipeLeftActionIcon(R.drawable.ic_trash_24)
             .addSwipeLeftLabel("Excluir")
+           // .addBackgroundColor(Color.RED)
+            .setSwipeLeftLabelColor(Color.RED) // Define a cor do texto para branco
+            .setSwipeLeftActionIconTint(Color.RED) // Define a cor do ícone para branco
             .create()
             .decorate()
 
