@@ -157,7 +157,7 @@
                 app:icon="@drawable/ic_add_cart"
                 app:iconGravity="textStart"
                 app:iconPadding="10dp"
-                app:iconTint="?attr/colorControlNormal"
+                app:iconTint="?android:attr/colorEdgeEffect"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

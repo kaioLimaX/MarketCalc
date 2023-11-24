@@ -11,8 +11,8 @@
 
     <!--cor secundaria-->
 
-    <color name="secundaria">#354959</color>
-    <color name="secundaria_variacao">#232C33</color>
+    <color name="secundaria">#00ACF3</color>
+    <color name="secundaria_variacao">#00ACF3</color>
 
 
     <color name="fab_done">#5FD564</color>

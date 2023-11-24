@@ -2,7 +2,6 @@ package com.skydevices.marketcalc.Utils.swipeExcluir
 
 import android.graphics.Canvas
 import android.graphics.Color
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.skydevices.marketcalc.R
@@ -21,7 +20,7 @@ class SwipeCallback(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
+        val position = viewHolder.bindingAdapterPosition
         swipeActionListener.onSwipeLeft(position)
     }
 

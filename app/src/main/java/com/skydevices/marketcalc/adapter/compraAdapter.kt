@@ -94,7 +94,7 @@ class compraAdapter(
             } else {
                 // binding.txtStatus.text = "Status: "
                 // binding.txtStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableCheck, null)
-                binding.imgStatus.setImageResource(R.drawable.ic_check_circle_24)
+                binding.imgStatus.setImageResource(R.drawable.ic_check_24_solid)
                 binding.txtStatus.text = "concluida"
             }
             binding.ClItemCompra.setOnClickListener {
