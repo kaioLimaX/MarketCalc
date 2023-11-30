@@ -1,22 +1,36 @@
-# Market Calc - Aplicativo de Cálculo de Compras
+## Market Calc - Aplicativo de Cálculo de Compras
 
-O Market Calc é um aplicativo intuitivo e eficiente projetado para simplificar o processo de compras, fornecendo recursos úteis para o cálculo de gastos, gestão de produtos e armazenamento de compras concluídas. Este aplicativo utiliza tecnologias como SqlOpenHelper, Swipe, adapters, faz uso extensivo de interfaces para interações intuitivas e inclui a funcionalidade de Badge para contar produtos. 
+### Descrição
 
-## Tecnologias Utilizadas
+O Market Calc é um aplicativo intuitivo e eficiente projetado para simplificar o processo de compras, fornecendo recursos úteis para o cálculo de gastos, gestão de produtos e armazenamento de compras concluídas. Este aplicativo utiliza tecnologias como `SqlOpenHelper`, `Swipe`, `adapters`, faz uso extensivo de interfaces para interações intuitivas e inclui a funcionalidade de `Badge` para contar produtos.
 
-- Kotlin: Linguagem de programação utilizada para desenvolver o aplicativo.
-- Retrofit: Biblioteca para realizar chamadas de API e consumir os dados de notícias.
-- Coroutines: Biblioteca para lidar com tarefas assíncronas e concorrência de forma mais fácil e segura.
-- Room: Biblioteca para persistência de dados local, utilizada para armazenar notícias favoritas offline.
-- Consumo de API: O aplicativo consome uma API de notícias para exibir os dados em tempo real.
-- Arquitetura: MVP (Model-View-Presenter)
+### Tecnologias Utilizadas
 
-## Funcionalidades
+- **SqlOpenHelper:**
+  - Utilizado para gerenciar o banco de dados interno do aplicativo, permitindo o armazenamento seguro e eficiente de informações sobre produtos e compras.
 
-- Visualização de notícias: O aplicativo exibe uma lista de notícias, incluindo título, descrição e imagem. Os usuários podem rolar a lista para ver mais notícias.
-- Pesquisa de notícias: Os usuários podem pesquisar por palavras-chave para encontrar notícias específicas.
-- Favoritos: Os usuários podem marcar notícias como favoritas, permitindo que as acessem facilmente posteriormente.
-- Armazenamento de favoritos offline: As notícias favoritas são armazenadas localmente utilizando a biblioteca Room, permitindo que os usuários as acessem mesmo sem conexão com a internet.
+- **Swipe:**
+  - Implementação de gestos de deslize (swipe) para uma navegação mais fluida entre as telas e interação intuitiva com os produtos.
+
+- **Adapters:**
+  - O uso de adapters facilita a exibição e atualização eficiente de listas de produtos, garantindo uma experiência de usuário agradável.
+
+- **Interfaces:**
+  - Interfaces são amplamente utilizadas para criar uma experiência de usuário intuitiva e fácil de usar. A interação com produtos, como adicionar, excluir e editar, é simplificada por meio de interfaces bem projetadas.
+
+- **Badge para Contagem de Produtos:**
+  - A implementação de `Badge` fornece uma maneira visual e informativa de contar os produtos adicionados ao carrinho, mantendo os usuários informados sobre suas seleções.
+
+### Funcionalidades
+
+1. **Cálculo de Gastos:**
+   - Permite aos usuários realizar o cálculo em tempo real dos gastos enquanto adicionam produtos ao carrinho.
+
+2. **Gestão de Produtos:**
+   - Adicionar, excluir e editar produtos, incluindo nome e preço.
+
+3. **Armazenamento de Compras Concluídas:**
+   - As compras concluídas são armazenadas para referência futura, facilitando comparações e análises de gastos ao longo do tempo.
 
 ## Configuração
 
