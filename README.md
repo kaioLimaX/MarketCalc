@@ -1,4 +1,4 @@
-## Market Calc - Aplicativo de Cálculo de Compras
+# Market Calc - Aplicativo de Cálculo de Compras
 
 ### Descrição
 
