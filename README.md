@@ -21,8 +21,8 @@ O Market Calc é um aplicativo intuitivo e eficiente projetado para simplificar 
 - **Badge para Contagem de Produtos:**
   - A implementação de `Badge` fornece uma maneira visual e informativa de contar os produtos adicionados ao carrinho, mantendo os usuários informados sobre suas seleções.
  
-- *Arquitetura: MVP (Model-View-Presenter):**
-  - A implementação da arquitetura `mvvp` faz com que o aplicativo se torne mais organizado e escalável.
+- **Arquitetura: MVP (Model-View-Presenter):**
+  - A implementação da arquitetura `mvp` faz com que o aplicativo se torne mais organizado e escalável.
 
 ### Funcionalidades
 
